@@ -96,12 +96,6 @@ Template.menu.helpers({
                     }, {
                         text: '移动客户端版本',
                         route: '/config/mobileVersion'
-                    }, {
-                        text: 'IP地址信任列表',
-                        route: '/config/IPtrustList'
-                    }, {
-                        text: '数据导入导出',
-                        route: '/config/dataIO'
                     }
                 ]
             },

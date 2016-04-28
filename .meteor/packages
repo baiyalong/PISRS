@@ -26,4 +26,6 @@ accounts-password
 accounts-base
 momentjs:moment
 session
+mikowals:batch-insert
+aldeed:collection2
 less
