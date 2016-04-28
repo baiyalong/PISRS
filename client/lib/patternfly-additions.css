@@ -3598,12 +3598,12 @@ table.datatable th:active {
     margin-top: 50px;
   }
 }
-.login-pf {
+.login-pf body {
   background: #080808 url("/img/bg-login.jpg") repeat-x 50% 0;
   background-size: auto;
 }
 @media (min-width: 768px) {
-  .login-pf {
+  .login-pf body {
     background-size: 100% auto;
   }
 }

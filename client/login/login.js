@@ -4,7 +4,8 @@ Template.login.onCreated(() => {
 })
 
 Template.login.onRendered(() => {
-
+    $('html').attr('class','login-pf')
+    $('body').attr('class','')
 })
 
 Template.login.helpers({
