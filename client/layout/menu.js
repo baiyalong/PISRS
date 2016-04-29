@@ -23,9 +23,6 @@ Template.menu.helpers({
                 secondary: 'monitor-secondary',
                 submenus: [
                     {
-                        text: '监测点信息',
-                        route: '/monitor/station'
-                    }, {
                         text: '每小时污染物',
                         route: '/monitor/pollutantHourly'
                     }, {
@@ -41,14 +38,14 @@ Template.menu.helpers({
                 secondary: 'forecast-secondary',
                 submenus: [
                     {
-                        text: '天气预报',
-                        route: '/forecast/weather'
-                    }, {
                         text: '每小时污染物',
                         route: '/forecast/pollutantHourly'
                     }, {
                         text: '每天污染物',
                         route: '/forecast/pollutantDaily'
+                    }, {
+                        text: '天气预报',
+                        route: '/forecast/weather'
                     }, {
                         text: '空气质量预报发布',
                         route: '/forecast/airQualityApply'
@@ -80,21 +77,21 @@ Template.menu.helpers({
             },
             {
                 icon: 'fa fa-gears',
-                text: '配置数据',
+                text: '配置管理',
                 route: '/config',
                 secondary: 'config-secondary',
                 submenus: [
                     {
-                        text: '污染物数据',
+                        text: '污染物信息',
                         route: '/config/pollutant'
                     }, {
-                        text: '污染物排放限值',
-                        route: '/config/pollutantLimit'
+                        text: '监测点信息',
+                        route: '/config/station'
                     }, {
-                        text: '行政区域',
+                        text: '行政区域信息',
                         route: '/config/area'
                     }, {
-                        text: '移动客户端版本',
+                        text: '移动客户端版本管理',
                         route: '/config/mobileVersion'
                     }
                 ]
