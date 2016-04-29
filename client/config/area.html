@@ -4,7 +4,7 @@
     <li>
         <a href="/config">配置数据</a>
     </li>
-    <li class="active">行政区域
+    <li class="active">行政区域信息
     </li>
 </ol>
 
@@ -39,7 +39,7 @@
         </thead>
         <tbody>
             {{#each areas}} 
-                <tr id='{{code}}'>
+                <tr id='{{_id}}'>
                     <td>{{name}}</td>
                     <td>{{levelString level}}</td>
                     <td>{{code}}</td>
