@@ -1,8 +1,8 @@
 
 Pollutant.deny({
-    insert: () => { return true; },
-    update: () => { return true; },
-    remove: () => { return true; },
+    insert: function(){ return true; },
+    update: function(){ return true; },
+    remove: function(){ return true; },
 })
 
 

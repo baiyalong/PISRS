@@ -1,9 +1,9 @@
-Template.login.onCreated(() => {
+Template.login.onCreated(function(){
 
 
 })
 
-Template.login.onRendered(() => {
+Template.login.onRendered(function(){
     $('html').attr('class','login-pf')
     $('body').attr('class','')
 })

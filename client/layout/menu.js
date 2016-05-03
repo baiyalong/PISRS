@@ -1,15 +1,15 @@
 
-Template.menu.onCreated(() => {
+Template.menu.onCreated(function(){
 
 
 })
 
-Template.menu.onRendered(() => {
+Template.menu.onRendered(function(){
 
 })
 
 Template.menu.helpers({
-    menus: () => {
+    menus: function(){
         return [
             // {
             //     icon: 'fa fa-dashboard',

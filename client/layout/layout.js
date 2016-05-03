@@ -1,9 +1,9 @@
-Template.layout.onCreated(() => {
+Template.layout.onCreated(function(){
 
 
 })
 
-Template.layout.onRendered(() => {
+Template.layout.onRendered(function(){
     $('html').attr('class', 'layout-pf layout-pf-fixed transitions')
     $('body').attr('class', 'cards-pf')
     

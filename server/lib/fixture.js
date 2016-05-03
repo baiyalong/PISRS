@@ -1,4 +1,4 @@
-Meteor.startup(() => {
+Meteor.startup(function () {
 
     //------------------------area---------------------------------------------------
     if (Area.find().count() == 0) {
@@ -62,7 +62,35 @@ Meteor.startup(() => {
     //--------------------------------------------------------------------------------------------------------------
     //--------------------------------------------------------------------------------------------------------------
     //--------------------------------------------------------------------------------------------------------------
-    //--------------------------------------------------------------------------------------------------------------
+    //-------------------------users-------------------------------------------------------------------------------------
+    if (Roles.getAllRoles().count() == 0) {
+        console.log('fixture----------users_role--------------start---------')
+        roles.forEach(function (e) {
+            Roles.createRole(e.role);
+        })
+        console.log('fixture----------users_role--------------start---------')
+    }
+    if (Meteor.users.find().count() == 0) {
+        console.log('fixture----------users_admin--------------start---------')
+        Meteor.call('users.admin.insert', {
+            username: 'admin',
+            password: '123',
+            role: 'superAdmin',
+            description: '超级管理员'
+        })
+        console.log('fixture----------users_admin--------------end---------')
+    }
+    if (UserPublic.find().count() == 0) {
+        console.log('fixture----------users_public--------------start---------')
+        UserPublic.batchInsert([
+            { username: 'test1', password: 'test1' },
+            { username: 'test1', password: 'test1' },
+            { username: 'test1', password: 'test1' },
+            { username: 'test1', password: 'test1' },
+            { username: 'test1', password: 'test1' },
+        ])
+        console.log('fixture----------users_public--------------end---------')
+    }
     //--------------------------------------------------------------------------------------------------------------
 
 })
