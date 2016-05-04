@@ -23,8 +23,8 @@
             {{#each users}}
             <tr id='{{_id}}'>
                 <td>{{username}}</td>
-                <td>{{role}}</td>
-                <td>{{description}}</td>
+                <td>{{role_name roles}}</td>
+                <td>{{profile.description}}</td>
                 <td>
                     <a href="#" data-toggle="modal" class="users_admin_edit"><span class="fa fa-edit">&nbsp;修改</span></a>
                     &nbsp;&nbsp;
