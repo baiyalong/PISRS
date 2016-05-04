@@ -6,13 +6,21 @@ Meteor.publish('users.admin', function () {
 
 Meteor.methods({
     'users.admin.insert': function (user) {
-        var _id = Accounts.createUser({ 
-            username: user.username, 
-            password: user.password, 
-            profile: { description: user.description } })
+        var _id = Accounts.createUser({
+            username: user.username,
+            password: user.password,
+            profile: { description: user.description }
+        })
         Roles.addUsersToRoles(_id, user.role)
     },
-    'users.admin.update': function (_id, user) {
+    'users.admin.update': function (user) {
+        var uu = Meteor.users.findOne(user._id);
+        if (uu.username != user.username) Accounts.setUsername(user._id, user.username);
+        if (user.password) Accounts.setPassword(user._id, user.password);
+        if (uu.roles[0] != user.role) Roles.setUserRoles(user._id, user.role);
+        if (uu.profile.description != user.description) Meteor.users.update(user._id, {
+            $set: { 'profile.description': user.description }
+        })
 
     },
     'users.admin.remove': function (_id) {

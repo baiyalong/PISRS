@@ -38,6 +38,10 @@ Template.users_admin.events({
     'click .users_admin_plus,.users_admin_edit': function () {
         Session.set('users_admin', this)
         Session.set('err', null)
+        $('#username').val('')
+        $('#password').val('')
+        $('#role').val('superAdmin')
+        $('#description').val('')
         $('#modal_users_admin').modal('show')
     },
     'click .users_admin_remove': function () {
@@ -55,21 +59,18 @@ Template.users_admin.events({
     },
     'click #modal_users_admin_save': function () {
         var user = {
+            _id: this._id,
             username: $('#username').val().trim(),
             password: $('#password').val(),
             role: $('#role').val(),
             description: $('#description').val().trim()
         }
         //TODO verify........
-        if (this._id) {
-            //update
-            console.log(this)
-        } else {
-            //insert
-            Meteor.call('users.admin.insert', user, function (err, res) {
-                if (err) Session.set('err', err)
-                else $('#modal_users_admin').modal('hide')
-            })
-        }
+
+        var method = user._id ? 'users.admin.update' : 'users.admin.insert';
+        Meteor.call(method, user, function (err, res) {
+            if (err) Session.set('err', err)
+            else $('#modal_users_admin').modal('hide')
+        })
     }
 })
