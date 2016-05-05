@@ -1,15 +1,15 @@
 
-Template.menu.onCreated(function(){
+Template.menu.onCreated(function () {
 
 
 })
 
-Template.menu.onRendered(function(){
+Template.menu.onRendered(function () {
 
 })
 
 Template.menu.helpers({
-    menus: function(){
+    menus: function () {
         return [
             // {
             //     icon: 'fa fa-dashboard',
@@ -23,12 +23,18 @@ Template.menu.helpers({
                 secondary: 'monitor-secondary',
                 submenus: [
                     {
-                        text: '每小时污染物',
-                        route: '/monitor/pollutantHourly'
+                        text: '城市每天污染物',
+                        route: '/monitor/pollutantCityDaily'
                     }, {
-                        text: '每天污染物',
-                        route: '/monitor/pollutantDaily'
-                    }
+                        text: '城市每小时污染物',
+                        route: '/monitor/pollutantCityHourly'
+                    }, {
+                        text: '监测点每天污染物',
+                        route: '/monitor/pollutantStationDaily'
+                    }, {
+                        text: '监测点每小时污染物',
+                        route: '/monitor/pollutantStationHourly'
+                    },
                 ]
             },
             {
