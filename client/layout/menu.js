@@ -43,15 +43,19 @@ Template.menu.helpers({
                 route: '/forecast',
                 secondary: 'forecast-secondary',
                 submenus: [
+                    // {
+                    //     text: '每小时污染物',
+                    //     route: '/forecast/pollutantHourly'
+                    // }, {
+                    //     text: '每天污染物',
+                    //     route: '/forecast/pollutantDaily'
+                    // }, 
                     {
-                        text: '每小时污染物',
-                        route: '/forecast/pollutantHourly'
-                    }, {
-                        text: '每天污染物',
-                        route: '/forecast/pollutantDaily'
-                    }, {
                         text: '天气预报',
                         route: '/forecast/weather'
+                    }, {
+                        text: '空气质量预报',
+                        route: '/forecast/airQuality'
                     }, {
                         text: '空气质量预报发布',
                         route: '/forecast/airQualityApply'

@@ -1,34 +1,34 @@
-Template.monitor_pollutantCityDaily.onCreated(function () {
+Template.forecast_airQuality.onCreated(function () {
     const pageNum = 1;
     const limitPerPage = 12;
     Session.set('pageNum', pageNum);
     Session.set('limitPerPage', limitPerPage);
 
-    Meteor.call('pollutantCityDaily_pageCount', limitPerPage, function (err, res) {
+    Meteor.call('airQualityForecast_pageCount', limitPerPage, function (err, res) {
         if (err) console.log(err);
         else Session.set('pageCount', res);
     })
     
     var self = this;
     Tracker.autorun(function () {
-        self.subscribe('pollutantCityDaily', Session.get('pageNum'), Session.get('limitPerPage'))
+        self.subscribe('airQualityForecast', Session.get('pageNum'), Session.get('limitPerPage'))
     })
 })
 
-Template.monitor_pollutantCityDaily.onRendered(function () {
+Template.forecast_airQuality.onRendered(function () {
 
 
 })
 
-Template.monitor_pollutantCityDaily.helpers({
+Template.forecast_airQuality.helpers({
     dataList: function () {
-        return PollutantCityDaily.find()
+        return AirQualityForecast.find()
     },
     moment: function (date) {
         return moment(date).format('YYYY-MM-DD');
     }
 })
 
-Template.monitor_pollutantCityDaily.events({
+Template.forecast_airQuality.events({
 
 })

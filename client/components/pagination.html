@@ -1,21 +1,34 @@
 <template name="pagination">
     
-<ul class="pagination" style="float:right">
+<ul class="pagination" style="float:right;margin:0;">
     <li>
-        <a href="#">
+        <a href="#" id='pageFirst'>
+            <span class="i fa fa-angle-double-left"></span>
+        </a>
+    </li>
+    <li>
+        <a href="#" id='pagePre'>
             <span class="i fa fa-angle-left"></span>
         </a>
     </li>
-    {{#each pages}}
     <li>
-        <a href="#">
-            {{pageNum}}
+        <a href="#" style='height:26px;'>
+            <span>
+                <input type="number" id='pageNum' class="form-control input-sm" 
+                value='{{pageNum}}' min='1' max='{{pageCount}}'
+                style='display:inline;width:40px;margin:0;padding:0;text-align:center;'/>
+                &nbsp;/&nbsp;{{pageCount}}
+                </span>
         </a>
     </li>
-    {{/each}}
     <li>
-        <a href="#">
+        <a href="#" id='pageNext'>
             <span class="i fa fa-angle-right"></span>
+        </a>
+    </li>
+    <li>
+        <a href="#" id='pageLast'>
+            <span class="i fa fa-angle-double-right"></span>
         </a>
     </li>
 </ul>
