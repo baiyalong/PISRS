@@ -24,9 +24,13 @@ Template.users_admin.helpers({
         return name;
     },
     role_options: function () {
-        var user = Session.get('users_admin');
+        // var user = Session.get('users_admin');
+        // return roles.map(function (e) {
+        //     if (e.role == user.roles[0])
+        //         e.selected = 'selected';
+        //     return e;
+        // });
         return roles;
-
 
     },
     err: function () {
@@ -38,10 +42,14 @@ Template.users_admin.events({
     'click .users_admin_plus,.users_admin_edit': function () {
         Session.set('users_admin', this)
         Session.set('err', null)
-        $('#username').val('')
-        $('#password').val('')
-        $('#role').val('superAdmin')
-        $('#description').val('')
+        if (!this._id) {
+            $('#username').val('')
+            $('#password').val('')
+            $('#role').val('superAdmin')
+            $('#description').val('')
+        } else {
+            $('#role').val(this.roles[0])
+        }
         $('#modal_users_admin').modal('show')
     },
     'click .users_admin_remove': function () {
