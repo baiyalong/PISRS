@@ -25,6 +25,9 @@ Template.config_mobileVersion.helpers({
         //     return e;
         // });
         return deviceTypes;
+    },
+    err: function () {
+        return Session.get('err');
     }
 })
 
@@ -37,7 +40,7 @@ Template.config_mobileVersion.events({
             $('#version').val('')
             $('#conf').val('')
             $('#description').val('')
-        }else{
+        } else {
             $('#deviceType').val(this.deviceType)
         }
         $('#modal_mobileVersion').modal('show')

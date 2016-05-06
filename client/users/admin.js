@@ -34,7 +34,7 @@ Template.users_admin.helpers({
 
     },
     err: function () {
-        return Session.get('err')
+        return Session.get('err');
     }
 })
 
