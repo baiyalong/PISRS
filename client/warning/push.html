@@ -10,6 +10,12 @@
 
 <form class="form-horizontal" id='warning_push'>
     <hr/>
+    {{#if err}}
+    <div class="alert alert-danger">
+        <span class="pficon pficon-error-circle-o"></span>
+        <strong>{{err}}</strong>
+    </div>
+    {{/if}}
     <div class="form-group">
         <label class="col-sm-2 control-label" for="channel">发布渠道</label>
         <div class="col-sm-8">
@@ -37,7 +43,6 @@
         </div>
     </div>
     
-    <hr/>
     <div class="form-group">
     <div class="col-sm-8"></div>
     <div class="col-sm-4">
@@ -45,8 +50,10 @@
         <button type="button" class="btn btn-primary" id='push_publish'>发布</button>
     </div>
     </div>
-    
+    <hr/>
 </form>
      
 {{>alert}}
+
+{{>warning_history}}
 </template>

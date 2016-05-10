@@ -10,7 +10,7 @@ Template.users_admin.onRendered(function () {
 
 Template.users_admin.helpers({
     users: function () {
-        return Meteor.users.find()
+        return Meteor.users.find({}, { sort: { createdAt: -1 } })
     },
     user: function () {
         return Session.get('users_admin')
