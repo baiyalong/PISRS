@@ -18,12 +18,6 @@ Template.config_mobileVersion.helpers({
         return moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
     deviceType_options: function () {
-        // var mobileVersion = Session.get('mobileVersion');
-        // return deviceTypes.map(function (e) {
-        //     if (e.value == mobileVersion.version)
-        //         e.selected = 'selected';
-        //     return e;
-        // });
         return deviceTypes;
     },
     err: function () {
@@ -35,13 +29,14 @@ Template.config_mobileVersion.events({
     'click .mobileVersion_plus,.mobileVersion_edit': function () {
         Session.set('mobileVersion', this)
         Session.set('err', null)
+        $("input:radio[name='deviceType']").attr("checked", false);
         if (!this._id) {
-            $('#deviceType').val('IOS')
             $('#version').val('')
             $('#conf').val('')
             $('#description').val('')
         } else {
-            $('#deviceType').val(this.deviceType)
+            var deviceType = '#' + this.deviceType;
+            $(deviceType).attr("checked", "checked");
         }
         $('#modal_mobileVersion').modal('show')
     },
@@ -61,7 +56,7 @@ Template.config_mobileVersion.events({
     'click #modal_mobileVersion_save': function () {
         var version = {
             _id: this._id,
-            deviceType: $('#deviceType').val(),
+            deviceType: $('input:radio[name="deviceType"]:checked').val(),
             version: $('#version').val().trim(),
             conf: $('#conf').val().trim(),
             description: $('#description').val().trim()

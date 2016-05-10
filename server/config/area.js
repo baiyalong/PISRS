@@ -25,18 +25,32 @@ Area.attachSchema(new SimpleSchema({
     },
     level: {
         type: String
+    },
+    longitude: {
+        type: Number,
+        decimal: true
+    },
+    latitude: {
+        type: Number,
+        decimal: true
+    },
+    weatherID: {
+        type: Number
     }
-
 }))
 
 
 Area.deny({
-    insert: function(){ return true; },
-    update: function(){ return true; },
-    remove: function(){ return true; },
+    insert: function () { return true; },
+    update: function () { return true; },
+    remove: function () { return true; },
 })
 
 
 Meteor.publish('areas', function () {
     return Area.find({}, { sort: { code: 1 } });
+})
+
+Meteor.publish('city', function () {
+    return Area.find({ level: 'city' }, { sort: { code: 1 }, fields: { code: 1, name: 1 } });
 })

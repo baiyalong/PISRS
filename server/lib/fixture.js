@@ -66,7 +66,7 @@ Meteor.startup(function () {
     if (Roles.getAllRoles().count() == 0) {
         console.log('fixture----------users_role--------------start---------')
         roles.forEach(function (e) {
-            Roles.createRole(e.role);
+            Roles.createRole(e.code);
         })
         console.log('fixture----------users_role--------------start---------')
     }

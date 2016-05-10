@@ -18,7 +18,7 @@ Template.users_admin.helpers({
     role_name: function (role) {
         var name = ''
         roles.forEach(function (e) {
-            if (e.role == role && role[0])
+            if (e.code == role && role[0])
                 name = e.name;
         })
         return name;

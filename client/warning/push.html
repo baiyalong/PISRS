@@ -1,4 +1,3 @@
-
 <template name="warning_push">
     
 <ol class="breadcrumb">
@@ -9,4 +8,45 @@
     </li>
 </ol>
 
+<form class="form-horizontal" id='warning_push'>
+    <hr/>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="channel">发布渠道</label>
+        <div class="col-sm-8">
+            {{#each channel_options}}
+            <label class="checkbox-inline">
+                <input type="checkbox" name='channels' checked="checked" id="{{code}}" value="{{code}}">{{name}}
+            </label> {{/each}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="city">发布城市</label>
+        <div class="col-sm-8">
+            <select class="form-control" id='city'>
+                    {{#each city_options}}
+                        <option value="{{code}}" selected='{{selected}}'>{{name}}</option>
+                    {{/each}}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="content">发布内容</label>
+        <div class="col-sm-8">
+            <textarea id="content" class="form-control" rows=5></textarea>
+        </div>
+    </div>
+    
+    <hr/>
+    <div class="form-group">
+    <div class="col-sm-8"></div>
+    <div class="col-sm-4">
+        <button type="button" class="btn btn-default" id='push_reset'>重置</button>
+        <button type="button" class="btn btn-primary" id='push_publish'>发布</button>
+    </div>
+    </div>
+    
+</form>
+     
+{{>alert}}
 </template>
