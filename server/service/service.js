@@ -64,10 +64,10 @@ Meteor.methods({
     },
     'service.startAll': function () {
         SyncedCron.start()
-        Service.update({}, { $set: { status: 1 } })
+        Service.update({}, { $set: { status: 1 } }, { multi: true })
     },
     'service.stopAll': function () {
         SyncedCron.pause()
-        Service.update({}, { $set: { status: 0 } })
+        Service.update({}, { $set: { status: 0 } }, { multi: true })
     },
 })

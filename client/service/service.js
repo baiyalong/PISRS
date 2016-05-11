@@ -18,15 +18,23 @@ Template.service.helpers({
 
 Template.service.events({
     'click .service_start_all': function () {
-        Meteor.call('service.startAll')
+        Meteor.call('service.startAll',function(err,res) {
+            if(err) console.log(err)
+        })
     },
     'click .service_stop_all': function () {
-        Meteor.call('service.stopAll')
+        Meteor.call('service.stopAll',function(err,res) {
+            if(err) console.log(err)
+        })
     },
     'click .service_start': function () {
-        Meteor.call('service.start', this.name)
+        Meteor.call('service.start', this.name,function(err,res) {
+            if(err) console.log(err)
+        })
     },
     'click .service_stop': function () {
-        Meteor.call('service.stop', this.name)
+        Meteor.call('service.stop', this.name,function(err,res) {
+            if(err) console.log(err)
+        })
     },
 })
