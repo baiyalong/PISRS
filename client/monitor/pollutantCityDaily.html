@@ -10,18 +10,19 @@
 
 <div>
     <form class="form-inline">
-        <div class="form-group">
-            <label for="city">城市名称</label>
+        <div class="form-group" style="margin-right:20px;">
             <select class="form-control" id='city'>
                     {{#each city_options}}
                         <option value="{{code}}" selected='{{selected}}'>{{name}}</option>
                     {{/each}}
             </select>
         </div>
-        <div class="form-group">
-            <label for="date">监测时间</label>
-            <input type="date" class="form-control" id="date" >
+        <div class="form-group" style="margin-right:20px;">
+            <div class="input-group date" id='date'>
+                <input type="text" class="form-control bootstrap-datepicke" readonly><span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+            </div>
         </div>
+        <input type="button" class="btn btn-default" id="search" value="搜索" style="margin-top:-1px;">
     </form>
 </div>
 <hr/>
@@ -52,16 +53,16 @@
                     <td>{{AREA}}</td>
                     <td>{{CITYCODE}}</td>
                     <td>{{moment MONITORTIME}}</td>
-                    <td>{{SO2}}</td>
-                    <td>{{NO2}}</td>
-                    <td>{{O3_1H}}</td>
-                    <td>{{O3_8H}}</td>
-                    <td>{{CO}}</td>
-                    <td>{{PM10}}</td>
-                    <td>{{PM2_5}}</td>
-                    <td>{{AQI}}</td>
-                    <td>{{PRIMARYPOLLUTANT}}</td>
-                    <td>{{LEVELNAME}}&nbsp;&nbsp;{{TYPENAME}}</td>
+                    <td><a href="" class="editable">{{SO2}}</a></td>
+                    <td><a>{{NO2}}</a></td>
+                    <td><a>{{O3_1H}}</a></td>
+                    <td><a>{{O3_8H}}</a></td>
+                    <td><a>{{CO}}</a></td>
+                    <td><a>{{PM10}}</a></td>
+                    <td><a>{{PM2_5}}</a></td>
+                    <td><a>{{AQI}}</a></td>
+                    <td><a>{{PRIMARYPOLLUTANT}}</a></td>
+                    <td><a>{{LEVELNAME}}&nbsp;&nbsp;{{TYPENAME}}</a></td>
                 </tr>
             {{/each}}
         </tbody>
