@@ -63,6 +63,7 @@ momentjs:moment@2.13.1
 mongo@1.1.7
 mongo-id@1.0.4
 natestrauser:animate-css@3.5.1
+natestrauser:x-editable-bootstrap@1.5.2_4
 npm-bcrypt@0.8.5
 npm-mongo@1.4.43
 observe-sequence@1.0.11

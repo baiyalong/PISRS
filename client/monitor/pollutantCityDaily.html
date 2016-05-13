@@ -8,6 +8,24 @@
     </li>
 </ol>
 
+<div>
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="city">城市名称</label>
+            <select class="form-control" id='city'>
+                    {{#each city_options}}
+                        <option value="{{code}}" selected='{{selected}}'>{{name}}</option>
+                    {{/each}}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date">监测时间</label>
+            <input type="date" class="form-control" id="date" >
+        </div>
+    </form>
+</div>
+<hr/>
+
 {{#if Template.subscriptionsReady}}
 <div class="table-responsive">
     <table class="table table-striped table-bordered table-hover">

@@ -8,11 +8,13 @@ Template.monitor_pollutantCityDaily.onCreated(function () {
         if (err) console.log(err);
         else Session.set('pageCount', res);
     })
-    
+
     var self = this;
     Tracker.autorun(function () {
         self.subscribe('pollutantCityDaily', Session.get('pageNum'), Session.get('limitPerPage'))
     })
+    
+    // self.subscribe('city')
 })
 
 Template.monitor_pollutantCityDaily.onRendered(function () {
@@ -26,7 +28,10 @@ Template.monitor_pollutantCityDaily.helpers({
     },
     moment: function (date) {
         return moment(date).format('YYYY-MM-DD');
-    }
+    },
+    city_options: function () {
+        return cities;
+    },
 })
 
 Template.monitor_pollutantCityDaily.events({
