@@ -3,38 +3,40 @@ Template.config_pollutant.onCreated(function () {
 })
 
 Template.config_pollutant.onRendered(function () {
+    this.autorun(function () {
+        if (Template.instance().subscriptionsReady()) {
+            setTimeout(editable, 0)
+        }
+    });
+    function editable() {
+        $('.editable').editable({
+            emptytext: 'null',
+            showbuttons: false,
+            mode: 'inline',
+            validate: function (value) {
+                // if ($.trim(value) == '') return '输入不能为空！';
+                if (isNaN(Number(value)) || parseInt(value) < 0) return '输入参数错误！'
+            },
+            url: function (params) {
+                var id = this.parentElement.parentElement.getAttribute('id');
+                var value = Number(params.value);
+                var d = new $.Deferred;
+                Meteor.call('pollutant.update', id, value, function (err, res) {
+                    err ? d.reject(err.message) : d.resolve()
+                })
+                return d.promise();
+            },
 
-
+        })
+    }
 })
 
 Template.config_pollutant.helpers({
     pollutants: function () {
         return Pollutant.find()
     },
-    pollutant: function () {
-        return Session.get('pollutant')
-    },
-    err: function () {
-        return Session.get('err');
-    }
 })
 
 Template.config_pollutant.events({
-    'click .pollutant_edit': function () {
-        Session.set('pollutant', this)
-        Session.set('err', null)
-        if (!this.limitValue)
-            $('#limitValue').val('')
-        $('#modal_pollutant').modal('show')
-    },
-    'click #modal_pollutant_save': function () {
-        var limitValue = $('#limitValue').val().trim();
-        if (isNaN(limitValue) || limitValue < 0)
-            Session.set('err', '输入错误！')
-        else
-            Meteor.call('pollutant.update', this._id, Number(limitValue), function (err, res) {
-                if (err) Session.set('err', err)
-                else $('#modal_pollutant').modal('hide')
-            })
-    }
+
 })

@@ -10,5 +10,8 @@ Meteor.publish('pollutantCityDaily', function (pageNum, limitPerPage, conditions
 Meteor.methods({
     'pollutantCityDaily_pageCount': function (limitPerPage, conditions = {}) {
         return Math.ceil(PollutantCityDaily.find(conditions).count() / limitPerPage)
+    },
+    'pollutantCityDaily.update': function (id, update) {
+        return PollutantCityDaily.update(id, { $set: update})
     }
 })

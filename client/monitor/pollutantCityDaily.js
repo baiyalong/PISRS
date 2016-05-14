@@ -25,7 +25,6 @@ Template.monitor_pollutantCityDaily.onRendered(function () {
         todayHighlight: true
     });
     $('#date').datepicker('setDate', new Date())
-    // $('#date').datepicker('setDate', new Date(Number(this.data.date)));
     $('#date').datepicker('setStartDate', (function () {
         var d = new Date();
         d.setDate(d.getDate() - 60);
@@ -33,44 +32,41 @@ Template.monitor_pollutantCityDaily.onRendered(function () {
     })())
     $('#date').datepicker('setEndDate', new Date())
 
-
-    // var data_item = PollutantCityDaily.findOne({}, { sort: { MONITORTIME: -1 } });
-    // console.log(data_item)
-    // if (data_item && data_item.MONITORTIME) {
-    //     $('#date').datepicker('setDate', new Date(data_item.MONITORTIME));
-    // }
-
     //---------------x-editable------------------------------------------------------
-    $('table a.editable').editable({
-        url: function (params) {
-            // var pollutant = this.getAttribute('pollutant');
-            var value = params.value;
-            var id = this.parentElement.parentElement.getAttribute('id');
-            console.log(   value, this, params)
-            var d = new $.Deferred;
-            //async saving data in js model\
-            // var update = {};
-            // update[pollutant] = value;
-            // DataStationHourly.update(id, { $set: update }, function (err, res) {
-            //     if (err)
-            //         d.reject(err.message)
-            //     else
-            //         d.resolve()
-            // })
-            return d.promise();
-        },
-        emptytext: '',
-        showbuttons: false,
-        mode: 'inline',
-        // validate: function (value) {
-        //     if ($.trim(value) == '') {
-        //         return '输入不能为空！';
-        //     }
-        //     if (isNaN(Number(value))) {
-        //         return '输入参数错误！'
-        //     }
-        // }
-    })
+    this.autorun(function () {
+        if (Template.instance().subscriptionsReady()) {
+            setTimeout(editable, 0)
+        }
+    });
+    function editable() {
+        $('.editable').editable({
+            emptytext: 'null',
+            showbuttons: false,
+            mode: 'inline',
+            validate: function (value) {
+                // if ($.trim(value) == '') return '输入不能为空！';
+                // if (isNaN(Number(value)) || parseInt(value) < 0) return '输入参数错误！'
+            },
+            url: function (params) {
+                var id = this.parentElement.parentElement.getAttribute('id');
+                var name = this.getAttribute('name');
+                var type = this.getAttribute('type');
+                var value = params.value;
+                if (type == 'number') value = Number(value);
+                else if (type = 'text') value = value.trim();
+                var update = {};
+                update[name] = value;
+                var d = new $.Deferred;
+                Meteor.call('pollutantCityDaily.update', id, update, function (err, res) {
+                    err ? d.reject(err.message) : d.resolve()
+                })
+                return d.promise();
+            },
+            success: function (response, newValue) {
+                console.log($(this), newValue)
+            }
+        })
+    }
 
 })
 
