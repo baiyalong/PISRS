@@ -52,7 +52,8 @@ Template.monitor_pollutantCityDaily.onRendered(function () {
                 var name = this.getAttribute('name');
                 var type = this.getAttribute('type');
                 var value = params.value;
-                if (type == 'number') value = Number(value);
+                if (value=='')value=null;
+                else if (type == 'number') value = Number(value);
                 else if (type = 'text') value = value.trim();
                 var update = {};
                 update[name] = value;
@@ -63,7 +64,11 @@ Template.monitor_pollutantCityDaily.onRendered(function () {
                 return d.promise();
             },
             success: function (response, newValue) {
-                console.log($(this), newValue)
+                setTimeout(reset, 0)
+                var self = $(this);
+                function reset() {
+                    self.text(newValue || null)
+                }
             }
         })
     }
