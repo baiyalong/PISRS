@@ -85,7 +85,7 @@ Template.monitor_pollutantStationHourly.helpers({
     city_options: function () {
         return cities;
     },
-        station_options: function () {
+    station_options: function () {
         return stations;
     },
 })
