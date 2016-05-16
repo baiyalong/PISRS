@@ -86,16 +86,37 @@ Template.monitor_pollutantStationDaily.helpers({
     city_options: function () {
         return cities;
     },
+    station_options: function () {
+        var cityCode = Session.get('cityCode');
+        var options = stations;
+        if (cityCode && cityCode != 150000) {
+            options = stations.filter(function (e) {
+                var code = Math.floor(e.code / 1000)
+                return code == cityCode || code == 150000
+            })
+        }
+        return options;
+    },
 })
 
 Template.monitor_pollutantStationDaily.events({
     'click #search': function (e, t) {
         var conditions = {
-            CITYCODE: $('#city').val(),
+            // CITYCODE: $('#city').val(),
             MONITORTIME: date_range_condition_day($('#date').datepicker('getDate'))
         }
         if (conditions.CITYCODE == 150000) delete conditions.CITYCODE;
         Session.set('conditions', conditions)
         Session.set('pageNum', 1);
+    },
+    'change #city': function (e, t) {
+        Session.set('cityCode', e.target.value)
+        $("#station").get(0).selectedIndex = 0;
+    },
+    'change #station': function (e, t) {
+        var stationCode = e.target.value;
+        Session.set('stationCode', stationCode)
+        if (stationCode != 150000000)
+            $('#city').val(Math.floor(stationCode / 1000))
     }
 })

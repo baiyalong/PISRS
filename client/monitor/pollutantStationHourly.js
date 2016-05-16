@@ -85,12 +85,15 @@ Template.monitor_pollutantStationHourly.helpers({
     city_options: function () {
         return cities;
     },
+        station_options: function () {
+        return stations;
+    },
 })
 
 Template.monitor_pollutantStationHourly.events({
     'click #search': function (e, t) {
         var conditions = {
-            CITYCODE: $('#city').val(),
+            // CITYCODE: $('#city').val(),
             monitorTime: date_range_condition_day($('#date').datepicker('getDate'))
         }
         if (conditions.CITYCODE == 150000) delete conditions.CITYCODE;

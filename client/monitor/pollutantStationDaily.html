@@ -19,6 +19,13 @@
             </select>
         </div>
         <div class="form-group" style="margin-right:20px;">
+            <select class="form-control" id='station'>
+                    {{#each station_options}}
+                        <option value="{{code}}" selected='{{selected}}'>{{name}}</option>
+                    {{/each}}
+            </select>
+        </div>
+        <div class="form-group" style="margin-right:20px;">
             <div class="input-group date" id='date'>
                 <input type="text" class="form-control bootstrap-datepicke" readonly><span class="input-group-addon"><span class="fa fa-calendar"></span></span>
             </div>
