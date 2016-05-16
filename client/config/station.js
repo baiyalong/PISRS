@@ -9,7 +9,7 @@ Template.config_station.onRendered(function () {
 
 Template.config_station.helpers({
     stations: function () {
-        return Station.find()
+        return Station.find({}, { sort: { StationId: 1 } })
     },
 
 })

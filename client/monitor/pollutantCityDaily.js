@@ -40,6 +40,7 @@ Template.monitor_pollutantCityDaily.onRendered(function () {
     });
     function editable() {
         $('.editable').editable({
+            // anim:true,
             emptytext: 'null',
             showbuttons: false,
             mode: 'inline',
@@ -52,9 +53,9 @@ Template.monitor_pollutantCityDaily.onRendered(function () {
                 var name = this.getAttribute('name');
                 var type = this.getAttribute('type');
                 var value = params.value;
-                if (value=='')value=null;
+                if (value == '') value = null;
                 else if (type == 'number') value = Number(value);
-                else if (type = 'text') value = value.trim();
+                else if (type == 'text') value = value.trim();
                 var update = {};
                 update[name] = value;
                 var d = new $.Deferred;
@@ -77,7 +78,7 @@ Template.monitor_pollutantCityDaily.onRendered(function () {
 
 Template.monitor_pollutantCityDaily.helpers({
     dataList: function () {
-        return PollutantCityDaily.find()
+        return PollutantCityDaily.find({}, { sort: { MONITORTIME: -1, CITYCODE: 1 } })
     },
     moment: function (date) {
         return moment(date).format('YYYY-MM-DD');

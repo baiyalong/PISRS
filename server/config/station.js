@@ -6,5 +6,5 @@ Station.deny({
 
 
 Meteor.publish('stations', function () {
-    return Station.find({}, { sort: { stationId: 1 } });
+    return Station.find({}, { sort: { StationId: 1 } });
 })
