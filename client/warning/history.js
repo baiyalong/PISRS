@@ -25,7 +25,7 @@ Template.warning_history.helpers({
         return Warning.find({}, { sort: { timestamp: -1 } })
     },
     channelNames: function (arr) {
-        return channels.filter(function (e) { return arr.indexOf(e.code) != -1; }).map(function (e) { return e.name; })
+        return dict.channels.filter(function (e) { return arr.indexOf(e.code) != -1; }).map(function (e) { return e.name; })
     },
     moment: function (date) {
         return moment(date).format('YYYY-MM-DD HH:mm:ss');

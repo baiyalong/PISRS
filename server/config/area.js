@@ -51,6 +51,6 @@ Meteor.publish('areas', function () {
     return Area.find({}, { sort: { code: 1 } });
 })
 
-Meteor.publish('city', function () {
+Meteor.publish('dict.cities', function () {
     return Area.find({ level: 'city' }, { sort: { code: 1 }, fields: { code: 1, name: 1 } });
 })

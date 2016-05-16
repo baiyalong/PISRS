@@ -78,19 +78,19 @@ Template.monitor_pollutantStationDaily.onRendered(function () {
 
 Template.monitor_pollutantStationDaily.helpers({
     dataList: function () {
-        return PollutantStationDaily.find()
+        return PollutantStationDaily.find({}, { sort: { MONITORTIME: -1, UNIQUECODE: 1 } })
     },
     moment: function (date) {
         return moment(date).format('YYYY-MM-DD');
     },
     city_options: function () {
-        return cities;
+        return dict.cities;
     },
     station_options: function () {
         var cityCode = Session.get('cityCode');
-        var options = stations;
+        var options = dict.stations;
         if (cityCode && cityCode != 150000) {
-            options = stations.filter(function (e) {
+            options = dict.stations.filter(function (e) {
                 var code = Math.floor(e.code / 1000)
                 return code == cityCode || code == 150000
             })
@@ -101,11 +101,18 @@ Template.monitor_pollutantStationDaily.helpers({
 
 Template.monitor_pollutantStationDaily.events({
     'click #search': function (e, t) {
+        var cityCode = $('#city').val();
+        var stationCode = $('#station').val();
+        var date = $('#date').datepicker('getDate');
         var conditions = {
-            // CITYCODE: $('#city').val(),
-            MONITORTIME: date_range_condition_day($('#date').datepicker('getDate'))
+            MONITORTIME: date_range_condition_day(date)
         }
-        if (conditions.CITYCODE == 150000) delete conditions.CITYCODE;
+        if (stationCode != 150000000)
+            conditions.UNIQUECODE = stationCode;
+        else if (stationCode == 150000000 && cityCode != 150000)
+            conditions.UNIQUECODE = { $regex: '^' + cityCode };
+        // else if(stationCode==150000000&&cityCode==150000)
+        // ;
         Session.set('conditions', conditions)
         Session.set('pageNum', 1);
     },

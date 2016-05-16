@@ -78,13 +78,15 @@ Template.monitor_pollutantCityHourly.onRendered(function () {
 
 Template.monitor_pollutantCityHourly.helpers({
     dataList: function () {
-        return PollutantCityHourly.find({}, { sort: { TimePoint: -1, CityCode: 1 } })
+        var conditions = Session.get('conditions');
+        var dateSort = conditions && conditions.TimePoint ? 1 : -1;
+        return PollutantCityHourly.find({}, { sort: { TimePoint: dateSort, CityCode: 1 } })
     },
     moment: function (date) {
         return moment(date).format('YYYY-MM-DD HH:mm');
     },
     city_options: function () {
-        return cities;
+        return dict.cities;
     },
 })
 

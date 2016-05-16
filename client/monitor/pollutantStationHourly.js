@@ -77,27 +77,62 @@ Template.monitor_pollutantStationHourly.onRendered(function () {
 
 Template.monitor_pollutantStationHourly.helpers({
     dataList: function () {
-        return PollutantStationHourly.find()
+        var conditions = Session.get('conditions');
+        var dateSort = conditions && conditions.monitorTime ? 1 : -1;
+        return PollutantStationHourly.find({}, { sort: { monitorTime: dateSort, stationCode: 1 } })
     },
     moment: function (date) {
         return moment(date).format('YYYY-MM-DD HH:mm');
     },
     city_options: function () {
-        return cities;
+        return dict.cities;
     },
     station_options: function () {
-        return stations;
+        var cityCode = Session.get('cityCode');
+        var options = dict.stations;
+        if (cityCode && cityCode != 150000) {
+            options = dict.stations.filter(function (e) {
+                var code = Math.floor(e.code / 1000)
+                return code == cityCode || code == 150000
+            })
+        }
+        return options;
     },
+    cityName: function (stationCode) {
+        var station = dict.stations.find(function (e) { return e.code == stationCode; })
+        return station && station.city || null;
+    },
+    stationName: function (stationCode) {
+        var station = dict.stations.find(function (e) { return e.code == stationCode; })
+        return station && station.name || null;
+    }
 })
 
 Template.monitor_pollutantStationHourly.events({
     'click #search': function (e, t) {
+        var cityCode = $('#city').val();
+        var stationCode = $('#station').val();
+        var date = $('#date').datepicker('getDate');
         var conditions = {
-            // CITYCODE: $('#city').val(),
-            monitorTime: date_range_condition_day($('#date').datepicker('getDate'))
+            monitorTime: date_range_condition_day(date)
         }
-        if (conditions.CITYCODE == 150000) delete conditions.CITYCODE;
+        if (stationCode != 150000000)
+            conditions.stationCode = Number(stationCode);
+        else if (stationCode == 150000000 && cityCode != 150000)
+            conditions.stationCode = { $gt: (+cityCode) * 1000, $lt: (+cityCode + 1) * 1000 };
+        // else if(stationCode==150000000&&cityCode==150000)
+        // ;
         Session.set('conditions', conditions)
         Session.set('pageNum', 1);
+    },
+    'change #city': function (e, t) {
+        Session.set('cityCode', e.target.value)
+        $("#station").get(0).selectedIndex = 0;
+    },
+    'change #station': function (e, t) {
+        var stationCode = e.target.value;
+        Session.set('stationCode', stationCode)
+        if (stationCode != 150000000)
+            $('#city').val(Math.floor(stationCode / 1000))
     }
 })

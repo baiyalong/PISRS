@@ -18,7 +18,7 @@ Template.config_mobileVersion.helpers({
         return moment(date).format('YYYY-MM-DD HH:mm:ss');
     },
     deviceType_options: function () {
-        return deviceTypes;
+        return dict.deviceTypes;
     },
     err: function () {
         return Session.get('err');

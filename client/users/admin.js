@@ -17,7 +17,7 @@ Template.users_admin.helpers({
     },
     role_name: function (role) {
         var name = ''
-        roles.forEach(function (e) {
+        dict.roles.forEach(function (e) {
             if (e.code == role && role[0])
                 name = e.name;
         })
@@ -30,7 +30,7 @@ Template.users_admin.helpers({
         //         e.selected = 'selected';
         //     return e;
         // });
-        return roles;
+        return dict.roles;
 
     },
     err: function () {

@@ -84,7 +84,7 @@ Template.monitor_pollutantCityDaily.helpers({
         return moment(date).format('YYYY-MM-DD');
     },
     city_options: function () {
-        return cities;
+        return dict.cities;
     },
 })
 

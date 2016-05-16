@@ -11,7 +11,7 @@ Template.service.helpers({
         return Service.find()
     },
     statusName: function (s) {
-        var ss = service_status.find(function (e) { return e.code == s; })
+        var ss = dict.service_status.find(function (e) { return e.code == s; })
         return ss && ss.name;
     }
 })

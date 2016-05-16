@@ -62,8 +62,8 @@ Meteor.startup(function () {
     //-------------------------service-------------------------------------------------------------------------------------
     if (Service.find().count() == 0) {
         console.log('fixture----------service--------------start---------')
-        Service.insert({ sn: 1, name: 'test1', schedule: 'every 20 seconds',status:1 })
-        Service.insert({ sn: 2, name: 'test2', schedule: 'every 15 seconds',status:1 })
+        Service.insert({ sn: 1, name: 'test1', schedule: 'every 20 seconds', status: 1 })
+        Service.insert({ sn: 2, name: 'test2', schedule: 'every 15 seconds', status: 1 })
         console.log('fixture----------service--------------end---------')
     }
     //--------------------------------------------------------------------------------------------------------------
@@ -71,6 +71,13 @@ Meteor.startup(function () {
     //-------------------------users-------------------------------------------------------------------------------------
     if (Roles.getAllRoles().count() == 0) {
         console.log('fixture----------users_role--------------start---------')
+        var roles = [
+            { code: 'superAdmin', name: '超级管理员' },
+            { code: 'sysAdmin', name: '系统管理员' },
+            { code: 'provinceAdmin', name: '省级管理员' },
+            { code: 'cityAdmin', name: '市级管理员' },
+            { code: 'countyAdmin', name: '县级管理员' },
+        ]
         roles.forEach(function (e) {
             Roles.createRole(e.code);
         })
