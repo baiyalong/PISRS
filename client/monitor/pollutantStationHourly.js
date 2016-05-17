@@ -85,13 +85,13 @@ Template.monitor_pollutantStationHourly.helpers({
         return moment(date).format('YYYY-MM-DD HH:mm');
     },
     city_options: function () {
-        return dict.cities;
+        return dict.cities();
     },
     station_options: function () {
         var cityCode = Session.get('cityCode');
-        var options = dict.stations;
+        var options = dict.stations();
         if (cityCode && cityCode != 150000) {
-            options = dict.stations.filter(function (e) {
+            options = options.filter(function (e) {
                 var code = Math.floor(e.code / 1000)
                 return code == cityCode || code == 150000
             })
@@ -99,11 +99,11 @@ Template.monitor_pollutantStationHourly.helpers({
         return options;
     },
     cityName: function (stationCode) {
-        var station = dict.stations.find(function (e) { return e.code == stationCode; })
+        var station = dict.stations().find(function (e) { return e.code == stationCode; })
         return station && station.city || null;
     },
     stationName: function (stationCode) {
-        var station = dict.stations.find(function (e) { return e.code == stationCode; })
+        var station = dict.stations().find(function (e) { return e.code == stationCode; })
         return station && station.name || null;
     }
 })

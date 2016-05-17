@@ -10,7 +10,7 @@ Template.warning_push.onRendered(function () {
 
 Template.warning_push.helpers({
     city_options: function () {
-        return dict.cities;
+        return dict.cities();
     },
     channel_options: function () {
         return dict.channels;

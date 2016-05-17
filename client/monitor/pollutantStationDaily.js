@@ -84,13 +84,13 @@ Template.monitor_pollutantStationDaily.helpers({
         return moment(date).format('YYYY-MM-DD');
     },
     city_options: function () {
-        return dict.cities;
+        return dict.cities();
     },
     station_options: function () {
         var cityCode = Session.get('cityCode');
-        var options = dict.stations;
+        var options = dict.stations();
         if (cityCode && cityCode != 150000) {
-            options = dict.stations.filter(function (e) {
+            options = options.filter(function (e) {
                 var code = Math.floor(e.code / 1000)
                 return code == cityCode || code == 150000
             })
