@@ -25,7 +25,7 @@ Template.config_area.onRendered(function () {
 
 Template.config_area.helpers({
     areas: function () {
-        return Area.find()
+        return Area.find({}, { sort: { code: 1 } })
     },
     levelString: function (level) {
         var levels = { 'province': '省级', 'city': '市级', 'county': '县级' }

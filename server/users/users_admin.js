@@ -15,10 +15,10 @@ Meteor.methods({
     },
     'users.admin.update': function (user) {
         var uu = Meteor.users.findOne(user._id);
-        if (uu.username != user.username) Accounts.setUsername(user._id, user.username);
+        if (user.username && uu.username != user.username) Accounts.setUsername(user._id, user.username);
         if (user.password) Accounts.setPassword(user._id, user.password);
-        if (uu.roles[0] != user.role) Roles.setUserRoles(user._id, user.role);
-        if (uu.profile.description != user.description) Meteor.users.update(user._id, {
+        if (user.role && uu.roles[0] != user.role) Roles.setUserRoles(user._id, user.role);
+        if (user.description && uu.profile.description != user.description) Meteor.users.update(user._id, {
             $set: { 'profile.description': user.description }
         })
 

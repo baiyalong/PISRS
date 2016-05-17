@@ -42,7 +42,7 @@ dict.stations = function () {
     var stations = [{ code: 150000000, name: '--全部监测点--', city: '--全部盟市--' }]
     return (function () {
         if (stations.length == 1) {
-            stations = stations.concat(Station.find({}, { sort: { UniqueCode: 1 }, fields: { UniqueCode: 1, PositionName: 1, Area: 1} }).fetch().map(function (e) {
+            stations = stations.concat(Station.find({}, { sort: { UniqueCode: 1 }, fields: { UniqueCode: 1, PositionName: 1, Area: 1 } }).fetch().map(function (e) {
                 return {
                     code: e.UniqueCode,
                     name: e.PositionName,

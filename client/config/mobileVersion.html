@@ -29,14 +29,12 @@
         <tbody>
             {{#each versions}}
             <tr id='{{_id}}'>
-                <td>{{deviceType}}</td>
-                <td>{{version}}</td>
-                <td>{{conf}}</td>
-                <td>{{description}}</td>
+                <td><span class="editable" type='select' name='deviceType'>{{deviceType}}</span></td>
+                <td><span class="editable" type='text' name='version'>{{version}}</span></td>
+                <td><span class="editable" type='textarea' name='conf'>{{conf}}</span></td>
+                <td><span class="editable" type='textarea' name='description'>{{description}}</span></td>
                 <td>{{moment timestamp}}</td>
                 <td>
-                    <a href="#" data-toggle="modal" class="mobileVersion_edit"><span class="fa fa-edit">&nbsp;修改</span></a> 
-                    &nbsp;&nbsp;
                     <a href="#" data-toggle="modal" class="mobileVersion_remove"><span class="fa fa-remove">&nbsp;删除</span></a>
                 </td>
             </tr>

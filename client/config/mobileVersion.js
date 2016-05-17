@@ -4,6 +4,74 @@ Template.config_mobileVersion.onCreated(function () {
 
 Template.config_mobileVersion.onRendered(function () {
 
+    this.autorun(function () {
+        if (Template.instance().subscriptionsReady()) {
+            setTimeout(editable, 0)
+        }
+    });
+    function editable() {
+        var url = function (params) {
+            var id = this.parentElement.parentElement.getAttribute('id');
+            var name = this.getAttribute('name');
+            var type = this.getAttribute('type');
+            var value = params.value;
+            if (value == '') value = null;
+            else if (type == 'number') value = Number(value);
+            else if (type == 'text' || type == 'textarea') value = value.trim();
+            var update = { _id: id };
+            update[name] = value;
+            var d = new $.Deferred;
+            Meteor.call('mobileVersion.update', update, function (err, res) {
+                err ? d.reject(err.message) : d.resolve()
+            })
+            return d.promise();
+        }
+        var success = function (response, newValue) {
+            setTimeout(reset, 0)
+            var self = $(this);
+            function reset() {
+                self.text(newValue || null)
+            }
+        }
+
+        $('.editable[type="text"]').editable({
+            emptytext: 'null',
+            showbuttons: false,
+            mode: 'inline',
+            validate: function (value) {
+                // if ($.trim(value) == '') return '输入不能为空！';
+                // if (isNaN(value) || Number(value) < 0) return '输入参数错误！'
+            },
+            url: url,
+            success: success
+        })
+
+        $('.editable[type="select"]').editable({
+            emptytext: 'null',
+            showbuttons: false,
+            mode: 'inline',
+            url: url,
+            success: success,
+            type: 'select',
+            prepend: "--请选择--",
+            source: dict.deviceTypes.map(function (e) {
+                return {
+                    value: e.code,
+                    text: e.name
+                }
+            })
+        })
+
+        $('.editable[type="textarea"]').editable({
+            emptytext: 'null',
+            showbuttons: false,
+            mode: 'inline',
+            url: url,
+            success: success,
+            type: 'textarea',
+            rows: 5
+        })
+    }
 
 })
 

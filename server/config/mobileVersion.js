@@ -30,7 +30,7 @@ MobileVersion.deny({
 
 
 Meteor.publish('mobileVersions', function () {
-    return MobileVersion.find({}, { sort: { timestamp: 1 } });
+    return MobileVersion.find({}, { sort: { timestamp: -1 } });
 })
 
 
