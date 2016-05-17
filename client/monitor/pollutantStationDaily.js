@@ -6,7 +6,7 @@ Template.monitor_pollutantStationDaily.onCreated(function () {
     Session.set('conditions', {})
 
     var self = this;
-    Tracker.autorun(function () {
+    self.autorun(function () {
         self.subscribe('pollutantStationDaily', Session.get('pageNum'), Session.get('limitPerPage'), Session.get('conditions'))
         Meteor.call('pollutantStationDaily_pageCount', Session.get('limitPerPage'), Session.get('conditions'), function (err, res) {
             if (err) console.log(err);

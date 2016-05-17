@@ -10,7 +10,7 @@ Template.forecast_airQuality.onCreated(function () {
     })
     
     var self = this;
-    Tracker.autorun(function () {
+    self.autorun(function () {
         self.subscribe('airQualityForecast', Session.get('pageNum'), Session.get('limitPerPage'))
     })
 })

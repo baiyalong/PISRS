@@ -127,19 +127,35 @@ Template.menu.helpers({
                 route: '/feedback'
             },
             {
-                icon: 'fa fa-weixin',
-                text: '微信',
-                route: '/weixin'
+                icon: 'fa fa-pie-chart',
+                text: '统计分析',
+                route: '/statistics',
+                secondary: 'statistics-secondary',
+                submenus: [
+                    {
+                        text: '访问量统计',
+                        route: '/statistics/visits'
+                    }
+                ]
             },
-            {
-                icon: 'fa fa-weibo',
-                text: '微博',
-                route: '/weibo'
-            },
+            // {
+            //     icon: 'fa fa-weixin',
+            //     text: '微信',
+            //     route: '/weixin'
+            // },
+            // {
+            //     icon: 'fa fa-weibo',
+            //     text: '微博',
+            //     route: '/weibo'
+            // },
         ]
     }
 })
 
 Template.menu.events({
-
+    // 'click .route': function (e, t) {
+    //     // e.preventDefault();
+    //     // console.log(this, e, e.target)
+    //     // FlowRouter.go(this.route)
+    // }
 })

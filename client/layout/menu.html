@@ -3,20 +3,20 @@
   <ul class="list-group">
     {{#each menus}}
     <li class="list-group-item {{#if secondary}}persistent-secondary{{/if}}" data-target="#{{secondary}}">
-      <a href="{{route}}">
+      <a class="route" href="" onclick="FlowRouter.go(this.getAttribute('route'));return false;" route="{{route}}">
         <span class="{{icon}}"></span>
         <span class="list-group-item-value">{{text}}</span>
       </a>
       {{#if secondary}}
       <div id="{{secondary}}" class="nav-pf-persistent-secondary">
         <div class="persistent-secondary-header">
-          <a class="secondary-collapse-toggle-pf" href="{{route}}" data-toggle="collapse-secondary-nav"></a>
+          <a class="secondary-collapse-toggle-pf route" href="" onclick="FlowRouter.go(this.getAttribute('route'));return false;" route="{{route}}" data-toggle="collapse-secondary-nav"></a>
           <span>{{text}}</span>
         </div>
         <ul class="list-group">
           {{#each submenus}}
           <li class="list-group-item active">
-            <a href="{{route}}">
+            <a class="route" href="" onclick="FlowRouter.go(this.getAttribute('route'));return false;" route="{{route}}">
               <span class="list-group-item-value">{{text}}</span>
               <div class="badge-container-pf">
                 <span class="badge">10</span>

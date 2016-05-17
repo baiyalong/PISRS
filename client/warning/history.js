@@ -10,7 +10,7 @@ Template.warning_history.onCreated(function () {
     })
 
     var self = this;
-    Tracker.autorun(function () {
+    self.autorun(function () {
         self.subscribe('warning', Session.get('pageNum'), Session.get('limitPerPage'))
     })
 })

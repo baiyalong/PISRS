@@ -10,7 +10,7 @@ Template.feedback.onCreated(function () {
     })
 
     var self = this;
-    Tracker.autorun(function () {
+    self.autorun(function () {
         self.subscribe('feedback', Session.get('pageNum'), Session.get('limitPerPage'))
     })
 })
