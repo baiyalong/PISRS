@@ -33,3 +33,5 @@ alanning:roles
 percolate:synced-cron
 natestrauser:x-editable-bootstrap
 rajit:bootstrap3-datepicker-zh-cn
+d3js:d3
+nvd3:nvd3

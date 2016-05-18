@@ -5,7 +5,6 @@
     "start": "meteor run"
   },
   "dependencies": {
-    "echarts": "^3.1.9",
     "meteor-node-stubs": "~0.2.0"
   }
 }
