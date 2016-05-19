@@ -106,4 +106,25 @@ Meteor.startup(function () {
     }
     //--------------------------------------------------------------------------------------------------------------
 
+    //---------------------statistics--visits----------------------------------------------------------------
+    if (Visits.find().count() == 0) {
+        console.log('fixture-----------statistics--visits------------start---------')
+        function rand() {
+            return Math.round(Math.random() * 1000);
+        }
+        var date = new Date('2016-05-01')
+        while (date < new Date()) {
+            Visits.insert({
+                website: rand(),
+                IOS: rand(),
+                Android: rand(),
+                weixin: rand(),
+                weibo: rand(),
+                timestamp: date
+            })
+            date = date.setHours(date.getHours() + 1)
+        }
+        console.log('fixture----------statistics--visits--------------end---------')
+    }
+    //---------------------------------------------------------------------------------------
 })
