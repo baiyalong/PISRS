@@ -5,31 +5,70 @@ Template.statistics_visits.onCreated(function () {
 })
 
 Template.statistics_visits.onRendered(function () {
-    // 基于准备好的dom，初始化echarts实例
     var chart = echarts.init(document.getElementById('visits_chart'));
-
-    // 指定图表的配置项和数据
+    // chart.showLoading();
+    function getData(name) {
+        var visits = [];
+        return (function () {
+            if (visits.length != Visits.find().count())
+                visits = Visits.find().fetch();
+            return visits.map(function (e) { return e[name]; });
+        })();
+    }
     var option = {
         title: {
-            text: 'ECharts 入门示例'
+            text: '访问量统计图表'
         },
-        tooltip: {},
+        tooltip: {
+            trigger: 'axis',
+        },
         legend: {
-            data: ['销量']
+            data: ['网站', 'IOS', 'Android', '微信', '微博']
         },
         xAxis: {
-            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+            // type: 'time',
+            data: getData('timestamp')
         },
-        yAxis: {},
-        series: [{
-            name: '销量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
-        }]
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '网站',
+                type: 'line',
+                data: getData('website')
+            },
+            {
+                name: 'IOS',
+                type: 'line',
+                data: getData('IOS')
+            },
+            {
+                name: 'Android',
+                type: 'line',
+                data: getData('Android')
+            },
+            {
+                name: '微信',
+                type: 'line',
+                data: getData('weixin')
+            },
+            {
+                name: '微博',
+                type: 'line',
+                data: getData('weibo')
+            },
+        ]
     };
-
-    // 使用刚指定的配置项和数据显示图表。
-    chart.setOption(option);
+    // chart.setOption(option);
+    this.autorun(function () {
+        if (Template.instance().subscriptionsReady()) {
+            setTimeout(renderChart, 0)
+        }
+    });
+    function renderChart() {
+        chart.setOption(option);
+    }
 
 })
 
