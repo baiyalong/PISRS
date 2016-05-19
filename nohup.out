@@ -42,3 +42,4 @@ If you notice problems related to these missing modules, consider running:
 
   meteor npm install --save echarts
 
+                                   => Meteor server restarted
