@@ -67,7 +67,6 @@ Meteor.startup(function () {
         console.log('fixture----------service--------------end---------')
     }
     //--------------------------------------------------------------------------------------------------------------
-    //--------------------------------------------------------------------------------------------------------------
     //-------------------------users-------------------------------------------------------------------------------------
     if (Roles.getAllRoles().count() == 0) {
         console.log('fixture----------users_role--------------start---------')
@@ -122,7 +121,7 @@ Meteor.startup(function () {
                 weibo: rand(),
                 timestamp: date
             })
-            date = date.setHours(date.getHours() + 1)
+            date.setHours(date.getHours() + 1)
         }
         console.log('fixture----------statistics--visits--------------end---------')
     }

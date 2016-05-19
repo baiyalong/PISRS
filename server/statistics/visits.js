@@ -28,6 +28,7 @@ Visits.attachSchema(new SimpleSchema({
 Meteor.publish('visits', function () {
     return Visits.find({}, {
         sort: { timestamp: -1 },
+        // limit: limit
     });
 })
 
