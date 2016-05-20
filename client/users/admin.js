@@ -68,15 +68,22 @@ Template.users_admin.onRendered(function () {
             showbuttons: false,
             mode: 'inline',
             url: url,
-            success: success,
             type: 'select',
             prepend: "--请选择--",
-            source: dict.roles.map(function (e) {
+            source: dict.roles().map(function (e) {
                 return {
                     value: e.code,
                     text: e.name
                 }
-            })
+            }),
+            success: function (response, newValue) {
+                setTimeout(reset, 0)
+                var self = $(this);
+                function reset() {
+                    var role = dict.roles().find(function (e) { return e.code == newValue });
+                    self.text(role && role.name || null)
+                }
+            }
         })
 
         $('.editable[type="textarea"]').editable({
@@ -101,7 +108,7 @@ Template.users_admin.helpers({
     },
     role_name: function (role) {
         var name = ''
-        dict.roles.forEach(function (e) {
+        dict.roles().forEach(function (e) {
             if (e.code == role && role[0])
                 name = e.name;
         })
@@ -114,7 +121,7 @@ Template.users_admin.helpers({
         //         e.selected = 'selected';
         //     return e;
         // });
-        return dict.roles;
+        return dict.roles();
 
     },
     err: function () {

@@ -69,16 +69,16 @@ Template.menu.helpers({
                 icon: 'fa fa-warning',
                 text: '预警信息',
                 route: '/warning',
-                secondary: 'warning-secondary',
-                submenus: [
-                    {
-                        text: '消息推送',
-                        route: '/warning/push'
-                    }, {
-                        text: '历史记录',
-                        route: '/warning/history'
-                    }
-                ]
+                // secondary: 'warning-secondary',
+                // submenus: [
+                //     {
+                //         text: '消息推送',
+                //         route: '/warning/push'
+                //     }, {
+                //         text: '历史记录',
+                //         route: '/warning/history'
+                //     }
+                // ]
             },
             {
                 icon: 'fa fa-dashboard',
@@ -130,24 +130,24 @@ Template.menu.helpers({
                 icon: 'fa fa-pie-chart',
                 text: '统计分析',
                 route: '/statistics',
-                secondary: 'statistics-secondary',
-                submenus: [
-                    {
-                        text: '访问量统计',
-                        route: '/statistics/visits'
-                    }
-                ]
+                // secondary: 'statistics-secondary',
+                // submenus: [
+                //     {
+                //         text: '访问量统计',
+                //         route: '/statistics/visits'
+                //     }
+                // ]
             },
             // {
             //     icon: 'fa fa-weixin',
             //     text: '微信',
             //     route: '/weixin'
             // },
-            // {
-            //     icon: 'fa fa-weibo',
-            //     text: '微博',
-            //     route: '/weibo'
-            // },
+            {
+                icon: 'fa fa-share-alt',
+                text: '社交分享',
+                route: '/share'
+            },
         ]
     }
 })
