@@ -10,13 +10,16 @@ Template.menu.onRendered(function () {
 
 Template.menu.helpers({
     menus: function () {
-        return [
+        var user = Meteor.user();
+        var role = user && user.roles[0];
+        var menuArr = [
             // {
             //     icon: 'fa fa-dashboard',
             //     text: '仪表盘',
             //     route: '/dashboard'
             // },
             {
+                role: 'admin',
                 icon: 'fa fa-area-chart',
                 text: '监测数据',
                 route: '/monitor',
@@ -38,6 +41,7 @@ Template.menu.helpers({
                 ]
             },
             {
+                role: 'admin',
                 icon: 'fa fa-line-chart',
                 text: '预报数据',
                 route: '/forecast',
@@ -66,6 +70,7 @@ Template.menu.helpers({
                 ]
             },
             {
+                role: 'admin',
                 icon: 'fa fa-warning',
                 text: '预警信息',
                 route: '/warning',
@@ -81,11 +86,13 @@ Template.menu.helpers({
                 // ]
             },
             {
+                role: 'admin',
                 icon: 'fa fa-dashboard',
                 text: '服务监控',
                 route: '/service'
             },
             {
+                role: 'admin',
                 icon: 'fa fa-gears',
                 text: '配置管理',
                 route: '/config',
@@ -107,6 +114,7 @@ Template.menu.helpers({
                 ]
             },
             {
+                role: 'admin',
                 icon: 'fa fa-users',
                 text: '用户管理',
                 route: '/users',
@@ -122,11 +130,13 @@ Template.menu.helpers({
                 ]
             },
             {
+                role: 'admin',
                 icon: 'fa fa-comments',
                 text: '用户反馈',
                 route: '/feedback'
             },
             {
+                role: 'admin',
                 icon: 'fa fa-pie-chart',
                 text: '统计分析',
                 route: '/statistics',
@@ -144,12 +154,32 @@ Template.menu.helpers({
             //     route: '/weixin'
             // },
             {
+                role: 'admin',
                 icon: 'fa fa-share-alt',
                 text: '社交分享',
                 route: '/share'
             },
+
+            //---------------------------
+            {
+                icon: 'fa fa-line-chart',
+                text: '空气质量预报发布',
+                route: '/forecast/airQualityApply',
+                role: 'apply'
+            },
+            {
+                icon: 'fa fa-line-chart',
+                text: '空气质量预报审核',
+                route: '/forecast/airQualityAudit',
+                role: 'audit'
+            },
         ]
-    }
+
+        return role ? menuArr.filter(function (e) {
+            if (role == 'admin' || role == 'audit') return e.role == role;
+            else return e.role == 'apply';
+        }) : null;
+    },
 })
 
 Template.menu.events({

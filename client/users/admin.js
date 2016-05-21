@@ -115,12 +115,6 @@ Template.users_admin.helpers({
         return name;
     },
     role_options: function () {
-        // var user = Session.get('users_admin');
-        // return roles.map(function (e) {
-        //     if (e.role == user.roles[0])
-        //         e.selected = 'selected';
-        //     return e;
-        // });
         return dict.roles();
 
     },
@@ -136,7 +130,7 @@ Template.users_admin.events({
         if (!this._id) {
             $('#username').val('')
             $('#password').val('')
-            $('#role').val('superAdmin')
+            $('#role').val('admin')
             $('#description').val('')
         } else {
             $('#role').val(this.roles[0])
