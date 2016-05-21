@@ -11,7 +11,7 @@ Template.menu.onRendered(function () {
 Template.menu.helpers({
     menus: function () {
         var user = Meteor.user();
-        var role = user && user.roles[0];
+        var role = user && user.roles && user.roles[0];
         var menuArr = [
             // {
             //     icon: 'fa fa-dashboard',

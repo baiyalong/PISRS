@@ -4,14 +4,14 @@ Template.forecast_airQualityApply.onCreated(function () {
     Session.set('pageNum', pageNum);
     Session.set('limitPerPage', limitPerPage);
 
-    Meteor.call('weatherForecast_pageCount', limitPerPage, function (err, res) {
+    Meteor.call('airQualityPrepare_pageCount', limitPerPage, function (err, res) {
         if (err) console.log(err);
         else Session.set('pageCount', res);
     })
 
     var self = this;
     self.autorun(function () {
-        self.subscribe('weatherForecast', Session.get('pageNum'), Session.get('limitPerPage'))
+        self.subscribe('airQualityPrepare', Session.get('pageNum'), Session.get('limitPerPage'))
     })
 })
 
