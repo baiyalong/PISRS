@@ -1,0 +1,117 @@
+Template.forecast_airQualityAudit.onCreated(function () {
+    const pageNum = 1;
+    const limitPerPage = 12;
+    Session.set('pageNum', pageNum);
+    Session.set('limitPerPage', limitPerPage);
+
+    Meteor.call('airQualityPrepare_pageCount', limitPerPage, function (err, res) {
+        if (err) console.log(err);
+        else Session.set('pageCount', res);
+    })
+
+    var self = this;
+    self.autorun(function () {
+        self.subscribe('airQualityPrepare', Session.get('pageNum'), Session.get('limitPerPage'))
+    })
+    self.subscribe('airQualityRelease')
+})
+
+Template.forecast_airQualityAudit.onRendered(function () {
+
+
+})
+
+Template.forecast_airQualityAudit.helpers({
+
+    airQualityModel: function () {
+        return Session.get('airQualityModel')
+    },
+    title: function () {
+        return Session.get('title')
+    },
+    err: function () {
+        return Session.get('err')
+    },
+    notAudit: function (statusCode) {
+        return statusCode == 0;
+    },
+    statusColor: function (statusCode) {
+        return statusCode = 1 ? 'green' : statusCode == -1 ? 'red' : '';
+    },
+    moment: function (date) {
+        return moment(date).format('YYYY-MM-DD')
+    },
+    momentShort: function (date) {
+        return moment(date).format('MM-DD')
+    },
+    airQualityList: function () {
+        return AirQualityPrepare.find({
+            date: {
+                $gt: (function () {
+                    var d = new Date();
+                    d.setDate(d.getDate() - 1);
+                    return d;
+                })()
+            }
+        }, { sort: { date: -1 } })
+    },
+    airQualityListHistory: function () {
+        return AirQualityPrepare.find({
+            date: {
+                $lt: (function () {
+                    var d = new Date();
+                    d.setDate(d.getDate() - 1);
+                    return d;
+                })()
+            }
+        }, { sort: { date: -1 } })
+    },
+})
+
+Template.forecast_airQualityAudit.events({
+    'click .pubBtn': function (e, t) {
+        Meteor.call('airQualityPrepare.release', function (err, res) {
+            if (err)
+                Util.modal('空气质量预报审核', err);
+            else
+                Util.modal('空气质量预报审核', '发布成功！');
+        })
+    },
+    'click .detail': function (e, t) {
+        Session.set('airQualityModel', this)
+        t.$('#airQualityDetailModal').modal()
+    },
+    'click .audit': function (e, t) {
+        var update = Session.get('auditStatus');
+        update.auditOption = t.$('textarea').val().trim()
+        console.log(update)
+        Meteor.call('auditAirQuality', Session.get('auditID'), update, function (err, res) {
+            if (err) Util.modal('空气质量预报审核', err);
+            t.$('#auditOption').modal('hide');
+        })
+    },
+    'click .pass': function (e, t) {
+        t.$('textarea').val('')
+        Session.set('err', null);
+        Session.set('title', '审核通过')
+        Session.set('auditID', this._id)
+        Session.set('auditStatus', { statusCode: 1, statusName: '审核通过' })
+        t.$('#auditOption').modal();
+    },
+    'click .back': function (e, t) {
+        t.$('textarea').val('')
+        Session.set('err', null);
+        Session.set('title', '退回修改')
+        Session.set('auditID', this._id)
+        Session.set('auditStatus', { statusCode: -1, statusName: '退回修改' })
+        t.$('#auditOption').modal();
+    },
+    'click .remove': function () {
+        if (confirm('确认要删除吗？'))
+            Meteor.call('removeAirQuality', this._id, this.statusCode, function (err, res) {
+                if (err) Util.modal('空气质量预报审核', err);
+                else
+                    Util.modal('空气质量预报审核', '删除成功！');
+            })
+    },
+})
