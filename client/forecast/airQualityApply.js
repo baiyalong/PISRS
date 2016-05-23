@@ -16,22 +16,327 @@ Template.forecast_airQualityApply.onCreated(function () {
 })
 
 Template.forecast_airQualityApply.onRendered(function () {
-
-
+    Session.set('cityCode', 150100)
+    Meteor.call('getMainCountyCode', Session.get('cityCode'), function (err, res) {
+        if (err) console.log(err);
+        else Session.set('county_option', res)
+    })
+    
+    
+    // Session.set('_id', '')
+    // Session.set('cityCode', city)
+    // Session.set('areaCode', county)
+    // Session.set('showLine', 1)
+    
+    
+    // this.autorun(function(){
+    //     var res = AirQuality.findOne({areaCode:Number($('#county').val()),date:{$gt:(function(){
+    //         var date = new Date();
+    //         date.setHours(0);
+    //         date.setMinutes(0);
+    //         date.setSeconds(0);
+    //         var d1 = new Date(date);
+    //         d1.setSeconds(d1.getSeconds()-1);
+    //         return d1;
+    //     }()),$lt:(function(){
+    //         var date = new Date();
+    //         date.setHours(0);
+    //         date.setMinutes(0);
+    //         date.setSeconds(0);
+    //         var d2 = new Date(date);
+    //         d2.setSeconds(d2.getSeconds()+1);
+    //         return d2;
+    //     })()}})
+    //     Session.set('airQuality',res)    
+    //     if(res)
+    //     Session.set('showLine', res.applyContent.detail.length)
+    //     // console.log(res)
+    // })
+    
 })
 
 Template.forecast_airQualityApply.helpers({
     today: function (date) {
         return moment(new Date()).format('YYYY-MM-DD');
     },
-    city_options: function () {
-        return dict.cities();
+    currentStatus: function () {
+        var applied = Session.get('airQuality');
+        var res = '草稿'
+        if (applied) {
+            res = applied.statusName;
+        }
+        return res;
     },
-    county_options: function () {
-        return dict.cities();
+    statusColor: function (statusCode) {
+        if (statusCode)
+            return statusCode >= 1 ? 'green' : statusCode == -1 ? 'red' : '';
+        var applied = Session.get('airQuality');
+        if (applied) {
+            var statusCode = applied.statusCode;
+            return statusCode >= 1 ? 'green' : statusCode == -1 ? 'red' : '';
+        }
+    },
+    city_options: function () {
+        return dict.cities().slice(1);
+    },
+    county_option: function () {
+        return Session.get('county_option')
+    },
+    primaryPollutant_options: function (name) {
+        return [
+            { code: 0, name: '--请选择--' },
+            { code: -1, name: '-' },
+            { code: 1, name: 'SO₂' },
+            { code: 2, name: 'NO₂' },
+            { code: 3, name: 'O₃' },
+            { code: 4, name: 'CO' },
+            { code: 5, name: 'PM10' },
+            { code: 6, name: 'PM2.5' },
+        ].map(function (e) {
+            if (e.name == name)
+                e.selected = 'selected'
+            return e;
+        })
+    },
+    airIndexLevel_options: function (name) {
+        return [
+            { code: 0, name: '--请选择--' },
+            { code: 1, name: '优' },
+            { code: 2, name: '优-良' },
+            { code: 3, name: '良' },
+            { code: 4, name: '良-轻度污染' },
+            { code: 5, name: '轻度污染' },
+            { code: 6, name: '轻度-中度污染' },
+            { code: 7, name: '中度污染' },
+            { code: 8, name: '中度-重度污染' },
+            { code: 9, name: '重度污染' },
+            { code: 10, name: '重度-严重污染' },
+            { code: 11, name: '严重污染' }
+        ].map(function (e) {
+            if (e.name == name)
+                e.selected = 'selected'
+            return e;
+        })
+    },
+    forecastList: function () {
+        var applied = Session.get('airQuality');
+        var line = Session.get('showLine') || 1;
+        if (applied) {
+            // line = applied.applyContent.detail.length;
+            // Session.set('showLine',line)
+        }
+        var areaCode = Number(Session.get('areaCode'));
+        var day = function (n) {
+            var date = new Date();
+            date.setDate(date.getDate() + n);
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            return date;
+        }
+        var arrLine = function (n) {
+            var res = {
+                date: day(n),
+                dateString: moment(day(n)).format('YYYY-MM-DD'),
+                showDetele: (function () {
+                    if (n == 1) return false;
+                    else if (n == 2) {
+                        if (line == 2) return true;
+                        else return false;
+                    }
+                    else if (n == 3) return true;
+                })()
+            }
+            var data = null;
+            if (applied) {
+                data = applied.applyContent.detail[n - 1]
+            } else {
+                var date = new Date();
+                date.setDate(date.getDate() + n);
+                date.setHours(0);
+                date.setMinutes(0);
+                date.setSeconds(0);
+                var d1 = new Date(date);
+                d1.setSeconds(d1.getSeconds() - 1);
+                var d2 = new Date(date);
+                d2.setSeconds(d2.getSeconds() + 1);
+                data = DataAirQuality.findOne({ areaCode: areaCode, date: { $gte: d1, $lte: d2 }, description: { $exists: false } })
+            }
+            if (data) {
+                res.primaryPollutant = data.primaryPollutant;
+                res.airIndexLevel = data.airIndexLevel;
+                res.airQualityIndex = data.airQualityIndex;
+            }
+            return res;
+        }
+        var res = [];
+        for (var i = 1; i <= 3; i++)
+            res.push(arrLine(i))
+        return res.slice(0, line)
     },
 })
 
 Template.forecast_airQualityApply.events({
+    'change #city': function (e, t) {
+        var cityCode = e.target.value;
+        Meteor.call('getMainCountyCode', Number(cityCode), function (err, res) {
+            if (err) console.log(err);
+            else Session.set('county_option', res)
+        })
+    },
+    'click .detail': function (e, t) {
+        Session.set('airQualityModel', this)
+        t.$('#airQualityDetailModal').modal()
+    },
+    'change .airQualityIndex': function (e, t) {
+        // var aqi = t.$(this).find('input.airQualityIndex').val().trim();
+        var aqi = e.target.value;
+        //    console.log(aqi)
+        if (!/\d-\d/.test(aqi)) return;
+        var arr = aqi.split('-');
+        var min = parseInt(arr[0]), max = parseInt(arr[1]);
+        if (!(min <= max && min >= 0)) return;
 
+        var rule = [0, 50, 100, 150, 200, 300, 9999]
+        var res = 0;
+        function inRange(val, min, max) {
+            return val > min && val <= max;
+        }
+        if (inRange(max, rule[0], rule[1])) res = 1;
+        else if (inRange(min, rule[0], rule[1]) && inRange(max, rule[1], rule[2])) res = 2;
+        else if (inRange(min, rule[1], rule[2]) && inRange(max, rule[1], rule[2])) res = 3;
+        else if (inRange(min, rule[1], rule[2]) && inRange(max, rule[2], rule[3])) res = 4;
+        else if (inRange(min, rule[2], rule[3]) && inRange(max, rule[2], rule[3])) res = 5;
+        else if (inRange(min, rule[2], rule[3]) && inRange(max, rule[3], rule[4])) res = 6;
+        else if (inRange(min, rule[3], rule[4]) && inRange(max, rule[3], rule[4])) res = 7;
+        else if (inRange(min, rule[3], rule[4]) && inRange(max, rule[4], rule[5])) res = 8;
+        else if (inRange(min, rule[4], rule[5]) && inRange(max, rule[4], rule[5])) res = 9;
+        else if (inRange(min, rule[4], rule[5]) && inRange(max, rule[5], rule[6])) res = 10;
+        else if (inRange(min, rule[5], rule[6])) res = 11;
+        else { alert('数值范围过大！'); return; }
+
+        // t.$(this).find('select.airIndexLevel').val(res);
+        var text = [{ code: 0, name: '--请选择--' },
+            { code: 1, name: '优' },
+            { code: 2, name: '优-良' },
+            { code: 3, name: '良' },
+            { code: 4, name: '良-轻度污染' },
+            { code: 5, name: '轻度污染' },
+            { code: 6, name: '轻度-中度污染' },
+            { code: 7, name: '中度污染' },
+            { code: 8, name: '中度-重度污染' },
+            { code: 9, name: '重度污染' },
+            { code: 10, name: '重度-严重污染' },
+            { code: 11, name: '严重污染' }];
+
+        $(e.target.parentNode.parentNode).find('select.airIndexLevel')
+            .val(text.filter(function (e) { return e.code == res })[0].name)
+
+        if (res == 1)
+            $(e.target.parentNode.parentNode).find('select.primaryPollutant').val('-')
+
+    },
+    // 'blur .aqiMin':function(e,t){
+    //    var min = t.$(this).find('input.aqiMin').val().trim();
+    //    console.log(min)
+    // },
+    // 'blur .aqiMax':function(e,t){
+
+    // },
+    'click .add': function () {
+        var line = Session.get('showLine') || 1;
+        if (line == 1 || line == 2) Session.set('showLine', line + 1);
+        else if (line == 3);
+    },
+    'click .delete': function () {
+        var line = Session.get('showLine') || 1;
+        if (line == 1);
+        else if (line == 2 || line == 3) Session.set('showLine', line - 1);
+    },
+    // 'change #city': function () {
+    //     var city = parseInt($('#city').val())
+    //     var select = false;
+    //     $('#county option').each(function () {
+    //         var county = parseInt($(this).attr('value'))
+    //         if (county > city && county < (city + 100)) {
+    //             $(this).show()
+    //             if (!select) {
+    //                 select = true;
+    //                 $('#county').val(county)
+    //             }
+    //         } else {
+    //             $(this).hide()
+    //         }
+    //     })
+    // },
+    'click .save': function (e, t) {
+        // var content = $('textarea').val();
+        // // if (content.replace(/(^\s*)|(\s*$)/g, "").length == 0) {
+        // //     Util.modal('空气质量预报发布', '发布内容为空！')
+        // //     return;
+        // // }
+        var err = false;
+        var data = {
+            date: (function () { var date = new Date(); date.setHours(0); date.setMinutes(0); date.setSeconds(0); return date; })(),
+            cityCode: Number(t.$('#city').find('option:selected').val()),
+            cityName: t.$('#city').find('option:selected').text(),
+            areaCode: Number(t.$('#county').find('option:selected').val()),
+            areaName: t.$('#county').find('option:selected').text(),
+            statusCode: 0,
+            statusName: '已提交',
+            applyUserName: Meteor.user().username,
+            applyTimestamp: new Date(),
+            applyContent: {
+                detail: (function () {
+                    var res = []
+                    t.$('table.forecastDetail tbody tr').each(function () {
+                        var line = {
+                            date: t.$(this).attr('date'),
+                            primaryPollutant: t.$(this).find('select.primaryPollutant').val(),
+                            airIndexLevel: t.$(this).find('select.airIndexLevel').val(),
+                            airQualityIndex: t.$(this).find('input.airQualityIndex').val().trim(),
+                        }
+                        if (line.primaryPollutant == '--请选择--' ||
+                            line.airIndexLevel == '--请选择--' ||
+                            line.airQualityIndex == '')
+                            err = true;
+                        res.push(line)
+                    })
+                    return res;
+                })(),
+                description: t.$('textarea').val().trim() || ''
+            }
+        }
+        if (err) Util.modal('空气质量预报发布', '输入参数错误！')
+        else {
+            Meteor.call('applyAirQuality', data, function (err, res) {
+                if (err)
+                    Util.modal('空气质量预报发布', err.message)
+                else
+                    Util.modal('空气质量预报发布', '提交成功！')
+            })
+        }
+    },
+    'click .cancel': function () {
+        $('textarea').val('')
+        Session.set('_id', '')
+        $('#date').val(moment(new Date()).format('YYYY-MM-DD'));
+        var city = parseInt($('#city').val())
+        var county = parseInt($('#county').val())
+        if (!isNaN(city) && !isNaN(county)) {
+            var select = false;
+            $('#county option').each(function () {
+                var county = parseInt($(this).attr('value'))
+                if (county > city && county < (city + 100)) {
+                    $(this).show()
+                    if (!select) {
+                        select = true;
+                        $('#county').val(county)
+                    }
+                } else {
+                    $(this).hide()
+                }
+            })
+        }
+    },
 })

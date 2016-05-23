@@ -54,3 +54,18 @@ Meteor.publish('areas', function () {
 Meteor.publish('dict.cities', function () {
     return Area.find({ level: 'city' }, { sort: { code: 1 }, fields: { code: 1, name: 1 } });
 })
+
+Meteor.methods({
+    'getMainCountyCode': function (cityCode) {
+        if (cityCode == 152500) return {
+            code: 152502,
+            name: '锡林浩特市'
+        };
+        var countyArr = Area.find({ parent_code: cityCode, level: 'county' }, { sort: { code: 1 } }).fetch()
+        var county = countyArr && countyArr[0] ? countyArr[0] : null;
+        return county ? {
+            code: county.code,
+            name: county.name
+        } : null;
+    }
+})
