@@ -6,8 +6,14 @@ AirQualityRelease.attachSchema(new SimpleSchema({
     cityCode: {
         type: Number
     },
+    cityName: {
+        type: String
+    },
     countyCode: {
         type: Number
+    },
+    countyName: {
+        type: String
     },
     primaryPollutant: {
         type: String, optional: true
@@ -38,6 +44,6 @@ AirQualityRelease.allow({
 
 Meteor.publish('airQualityRelease', function () {
     return AirQualityRelease.find({}, {
-        sort: { date: -1, cityCode: 1 },
+        sort: { cityCode: 1, date: 1 }
     });
 })

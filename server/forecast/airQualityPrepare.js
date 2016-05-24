@@ -95,13 +95,17 @@ Meteor.methods({
     'airQualityPrepare.insert': function (item) {
         return AirQualityPrepare.insert(item);
     },
-    'airQualityPrepare.update': function () { },
-    'airQualityPrepare.remove': function (id, real) {
-        var areaCode = AirQuality.findOne({ _id: id }).areaCode;
-        AirQuality.remove({ _id: id })
-        if (real) {
-            AirQualityPrepare.remove({ areaCode: areaCode, date: { $gt: new Date() } })
-        }
+    'airQualityPrepare.update': function (_id, item) {
+        return AirQualityPrepare.update(_id, { $set: item });
+    },
+    'airQualityPrepare.current': function (conditions) {
+        return AirQualityPrepare.findOne(conditions)
+    },
+    'airQualityPrepare.currentArr': function (conditions) {
+        return AirQualityPrepare.find(conditions)
+    },
+    'airQualityPrepare.remove': function (_id) {
+        return AirQualityPrepare.remove(_id)
     },
     'airQualityPrepare.apply': function (data) {
         AirQuality.upsert({
@@ -119,7 +123,9 @@ Meteor.methods({
         }, { $set: data })
     },
     'airQualityPrepare.audit': function (id, update) {
-        AirQuality.update({ _id: id }, { $set: update })
+        update.auditUserName = Meteor.user().username;
+        update.auditTimestamp = new Date();
+        return AirQualityPrepare.update(id, { $set: update })
         // if (update.statusCode == 1) {
         //     function ds(date){
         //         var d1 = new Date(date);
@@ -159,8 +165,8 @@ Meteor.methods({
         //点击发布按钮，DataAirQuality清空，通过审核的AirQuality更新到DataAirQuality
         //前台接口部分展示DataAirQuality所有数据
 
-        DataAirQuality.remove({});
-        AirQuality.find({
+        AirQualityRelease.remove({});
+        AirQualityPrepare.find({
             statusCode: { $gte: 1 }, date: {
                 $gt: (function () {
                     var d = new Date();
@@ -170,7 +176,7 @@ Meteor.methods({
             }
         }).forEach(function (audit) {
 
-            AirQuality.update({ _id: audit._id }, {
+            AirQualityPrepare.update({ _id: audit._id }, {
                 $set: {
                     statusCode: 2,
                     statusName: '已发布'
@@ -178,20 +184,27 @@ Meteor.methods({
             })
 
             audit.applyContent.detail.forEach(function (e) {
-                DataAirQuality.insert({
+                AirQualityRelease.insert({
                     date: e.date,
-                    areaCode: audit.areaCode,
+                    cityCode: audit.cityCode,
+                    cityName: audit.cityName,
+                    countyCode: audit.countyCode,
+                    countyName: audit.countyName,
                     primaryPollutant: e.primaryPollutant,
                     airIndexLevel: e.airIndexLevel,
                     airQualityIndex: e.airQualityIndex,
-                    visibility: e.visibility
                 })
             })
-            DataAirQuality.insert({
+
+            AirQualityRelease.insert({
                 date: audit.date,
-                areaCode: audit.areaCode,
+                cityCode: audit.cityCode,
+                cityName: audit.cityName,
+                countyCode: audit.countyCode,
+                countyName: audit.countyName,
                 description: audit.applyContent.description || ''
             })
+
         })
     }
 })

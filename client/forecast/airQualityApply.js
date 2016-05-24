@@ -5,63 +5,81 @@ Template.forecast_airQualityApply.onCreated(function () {
     Session.set('limitPerPage', limitPerPage);
 
     Session.set('cityCode', 150100)
+    Session.set('showLine', 1)
 
     var self = this;
     self.autorun(function () {
-        Session.set('conditions', { cityCode: Number(Session.get('cityCode')) })
+        Session.set('conditions', {
+            cityCode: Number(Session.get('cityCode')),
+            date: {
+                $lt: (function () {
+                    var d = new Date();
+                    d.setDate(d.getDate() - 1);
+                    return d;
+                })()
+            }
+        })
+        self.subscribe('airQualityPrepare', pageNum, limitPerPage, {
+            cityCode: Number(Session.get('cityCode')),
+            date: {
+                $gt: (function () {
+                    var d = new Date();
+                    d.setDate(d.getDate() - 1);
+                    return d;
+                })()
+            }
+        })
         self.subscribe('airQualityPrepare', Session.get('pageNum'), Session.get('limitPerPage'), Session.get('conditions'))
         Meteor.call('airQualityPrepare_pageCount', Session.get('limitPerPage'), Session.get('conditions'), function (err, res) {
             if (err) console.log(err);
             else Session.set('pageCount', res);
         })
+        Meteor.call('getMainCountyCode', Session.get('cityCode'), function (err, res) {
+            if (err) console.log(err);
+            else Session.set('county_option', res)
+        })
     })
 })
 
 Template.forecast_airQualityApply.onRendered(function () {
-
-    Meteor.call('getMainCountyCode', Session.get('cityCode'), function (err, res) {
-        if (err) console.log(err);
-        else Session.set('county_option', res)
-    })
-
-
-    // Session.set('_id', '')
-    // Session.set('cityCode', city)
-    // Session.set('areaCode', county)
-    Session.set('showLine', 1)
-
-
     this.autorun(function () {
-        var res = AirQualityPrepare.findOne({
-            cityCode: Session.get('cityCode'), date: {
+
+        var user = Meteor.user();
+        var role = user && user.roles ? user.roles[0] : null;
+        var cityCode = 150100;
+        var role_is_applyer = false;
+        if (role && role != 'admin' && role != 'audit') {
+            cityCode = Number(role);
+            role_is_applyer = true;
+        }
+        $('#city').val(cityCode)
+        Session.set('cityCode', cityCode);
+        Session.set('role_is_applyer', role_is_applyer)
+
+
+        if (Template.instance().subscriptionsReady()) {
+            setTimeout(showLine, 0);
+        }
+    });
+    function showLine() {
+        var item = AirQualityPrepare.findOne({
+            cityCode: Number(Session.get('cityCode')),
+            date: {
                 $gt: (function () {
-                    var date = new Date();
-                    date.setHours(0);
-                    date.setMinutes(0);
-                    date.setSeconds(0);
-                    var d1 = new Date(date);
-                    d1.setSeconds(d1.getSeconds() - 1);
-                    return d1;
-                } ()), $lt: (function () {
-                    var date = new Date();
-                    date.setHours(0);
-                    date.setMinutes(0);
-                    date.setSeconds(0);
-                    var d2 = new Date(date);
-                    d2.setSeconds(d2.getSeconds() + 1);
-                    return d2;
+                    var d = new Date();
+                    d.setDate(d.getDate() - 1);
+                    return d;
                 })()
             }
-        })
-        Session.set('airQuality', res)
-        if (res)
-            Session.set('showLine', res.applyContent.detail.length)
-        // console.log(res)
-    })
-
+        });
+        Session.set('showLine', item ? item.applyContent.detail.length : 1);
+    }
 })
 
 Template.forecast_airQualityApply.helpers({
+    role_is_applyer: function () {
+        return Session.get('role_is_applyer') || false;
+    },
     moment: function (date) {
         return moment(date).format('YYYY-MM-DD')
     },
@@ -69,7 +87,7 @@ Template.forecast_airQualityApply.helpers({
         return moment(new Date()).format('YYYY-MM-DD');
     },
     currentStatus: function () {
-        var applied = Session.get('airQuality');
+        var applied = currentItem();
         var res = '草稿'
         if (applied) {
             res = applied.statusName;
@@ -79,7 +97,7 @@ Template.forecast_airQualityApply.helpers({
     statusColor: function (statusCode) {
         if (statusCode)
             return statusCode >= 1 ? 'green' : statusCode == -1 ? 'red' : '';
-        var applied = Session.get('airQuality');
+        var applied = currentItem();
         if (applied) {
             var statusCode = applied.statusCode;
             return statusCode >= 1 ? 'green' : statusCode == -1 ? 'red' : '';
@@ -128,13 +146,8 @@ Template.forecast_airQualityApply.helpers({
         })
     },
     forecastList: function () {
-        var applied = Session.get('airQuality');
-        var line = Session.get('showLine') || 1;
-        if (applied) {
-            // line = applied.applyContent.detail.length;
-            // Session.set('showLine',line)
-        }
-        var areaCode = Number(Session.get('areaCode'));
+        var applied = currentItem();
+        var line = Session.get('showLine');
         var day = function (n) {
             var date = new Date();
             date.setDate(date.getDate() + n);
@@ -183,21 +196,46 @@ Template.forecast_airQualityApply.helpers({
             res.push(arrLine(i))
         return res.slice(0, line)
     },
+    description: function () {
+        var applied = currentItem();
+        return applied ? applied.applyContent.description : '';
+    },
     err: function () {
         return Session.get('err')
     },
     airQualityPrepareList: function () {
-        return AirQualityPrepare.find({}, { sort: { date: -1 } })
+        return AirQualityPrepare.find({
+            cityCode: Number(Session.get('cityCode')),
+            date: {
+                $lt: (function () {
+                    var d = new Date();
+                    d.setDate(d.getDate() - 1);
+                    return d;
+                })()
+            }
+        }, { sort: { date: -1 } })
+    },
+    airQualityModel: function () {
+        return Session.get('airQualityModel')
+    },
+    auditOpinion: function () {
+        var applied = currentItem();
+        if (applied) return {
+            opinion: applied.auditOpinion,
+            username: applied.auditUserName,
+            timestamp: moment(applied.applyTimestamp).format('YYYY-MM-DD HH:mm:ss')
+        }
     },
 })
 
 Template.forecast_airQualityApply.events({
     'change #city': function (e, t) {
         var cityCode = e.target.value;
-        Session.set('cityCode', Number(cityCode))
+        Session.set('err', null);
+        Session.set('cityCode', Number(cityCode));
         Meteor.call('getMainCountyCode', Number(cityCode), function (err, res) {
             if (err) console.log(err);
-            else Session.set('county_option', res)
+            else Session.set('county_option', res);
         })
     },
     'click .detail': function (e, t) {
@@ -206,9 +244,7 @@ Template.forecast_airQualityApply.events({
     },
     'change .airQualityIndex': function (e, t) {
         Session.set('err', null)
-        // var aqi = t.$(this).find('input.airQualityIndex').val().trim();
         var aqi = e.target.value;
-        //    console.log(aqi)
         if (!/\d-\d/.test(aqi)) return;
         var arr = aqi.split('-');
         var min = parseInt(arr[0]), max = parseInt(arr[1]);
@@ -253,39 +289,16 @@ Template.forecast_airQualityApply.events({
             $(e.target.parentNode.parentNode).find('select.primaryPollutant').val('-')
 
     },
-    // 'blur .aqiMin':function(e,t){
-    //    var min = t.$(this).find('input.aqiMin').val().trim();
-    //    console.log(min)
-    // },
-    // 'blur .aqiMax':function(e,t){
-
-    // },
     'click .add': function () {
-        var line = Session.get('showLine') || 1;
+        var line = Session.get('showLine');
         if (line == 1 || line == 2) Session.set('showLine', line + 1);
         else if (line == 3);
     },
     'click .delete': function () {
-        var line = Session.get('showLine') || 1;
+        var line = Session.get('showLine');
         if (line == 1);
         else if (line == 2 || line == 3) Session.set('showLine', line - 1);
     },
-    // 'change #city': function () {
-    //     var city = parseInt($('#city').val())
-    //     var select = false;
-    //     $('#county option').each(function () {
-    //         var county = parseInt($(this).attr('value'))
-    //         if (county > city && county < (city + 100)) {
-    //             $(this).show()
-    //             if (!select) {
-    //                 select = true;
-    //                 $('#county').val(county)
-    //             }
-    //         } else {
-    //             $(this).hide()
-    //         }
-    //     })
-    // },
     'click .save': function (e, t) {
         // var content = $('textarea').val();
         // // if (content.replace(/(^\s*)|(\s*$)/g, "").length == 0) {
@@ -325,36 +338,60 @@ Template.forecast_airQualityApply.events({
                 description: t.$('textarea').val().trim() || ''
             }
         }
+        var current = currentItem();
         if (err) Session.set('err', '输入参数错误！')
-        else {
+        else if (!current) {
             Meteor.call('airQualityPrepare.insert', airQualityPrepare, function (err, res) {
-                if (err)
-                    Session.set('err', err.message)
-                // else
-                //     Util.modal('空气质量预报发布', '提交成功！')
+                if (err) Session.set('err', err.message)
+            })
+        }
+        else if (current && current._id) {
+            Meteor.call('airQualityPrepare.update', current._id, airQualityPrepare, function (err, res) {
+                if (err) Session.set('err', err.message)
             })
         }
     },
-    'click .cancel': function () {
-        $('textarea').val('')
-        Session.set('_id', '')
-        $('#date').val(moment(new Date()).format('YYYY-MM-DD'));
-        var city = parseInt($('#city').val())
-        var county = parseInt($('#county').val())
-        if (!isNaN(city) && !isNaN(county)) {
-            var select = false;
-            $('#county option').each(function () {
-                var county = parseInt($(this).attr('value'))
-                if (county > city && county < (city + 100)) {
-                    $(this).show()
-                    if (!select) {
-                        select = true;
-                        $('#county').val(county)
-                    }
-                } else {
-                    $(this).hide()
-                }
-            })
-        }
-    },
+    // 'click .cancel': function () {
+    //     // $('textarea').val('')
+    //     // Session.set('_id', '')
+    //     // $('#date').val(moment(new Date()).format('YYYY-MM-DD'));
+    //     // var city = parseInt($('#city').val())
+    //     // var county = parseInt($('#county').val())
+    //     // if (!isNaN(city) && !isNaN(county)) {
+    //     //     var select = false;
+    //     //     $('#county option').each(function () {
+    //     //         var county = parseInt($(this).attr('value'))
+    //     //         if (county > city && county < (city + 100)) {
+    //     //             $(this).show()
+    //     //             if (!select) {
+    //     //                 select = true;
+    //     //                 $('#county').val(county)
+    //     //             }
+    //     //         } else {
+    //     //             $(this).hide()
+    //     //         }
+    //     //     })
+    //     // }
+    // },
 })
+
+
+
+//-----------------------------------
+var currentItem = function () {
+    return AirQualityPrepare.findOne({
+        cityCode: Number(Session.get('cityCode')),
+        date: {
+            $gt: (function () {
+                var d = new Date();
+                d.setDate(d.getDate() - 1);
+                return d;
+            })()
+        }
+    });
+}
+
+var currentLines = function () {
+    var item = currentItem();
+    return item ? item.applyContent.detail.length : 1;
+}
