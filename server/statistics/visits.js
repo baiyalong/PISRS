@@ -26,9 +26,10 @@ Visits.attachSchema(new SimpleSchema({
 
 
 Meteor.publish('visits', function () {
+    const limit = 24 * 30 * 3; //last 3 month
     return Visits.find({}, {
         sort: { timestamp: -1 },
-        // limit: limit
+        limit: limit
     });
 })
 
