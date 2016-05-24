@@ -6,4 +6,93 @@
     </li>
 </ol>
 
+<div class="row-fluid list">
+    <div class="col-md-12">
+        <p><b>发布设置</b></p>
+        <table class="table table-bordered table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th width='10%'>变量名称</th>
+                    <th width='20%'>变量简介</th>
+                    <th width='60%'>当前数据值</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each varList}}
+                <tr id='{{code}}'>
+                    <td>{{name}}</td>
+                    <td>{{description}}</td>
+                    <td>{{value}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-12">
+        <p><b>信息编辑</b></p>
+        <textarea rows="10" class="form-control" id="template">{{current_template}}</textarea>
+        <div class="col-sm-8"></div>
+        <div class="col-sm-4">
+            <button type="button" class="btn btn-default" id='preview' style="margin-top:5px;">预览</button>
+            <button type="button" class="btn btn-default" id='publish' style="margin-top:5px;">发布</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="row-fluid list">
+    <div class="col-md-12">
+        <p><b>历史记录</b></p>
+        {{#if Template.subscriptionsReady}}
+        <table class="table table-condensed table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>发布时间</th>
+                    <th>发布状态</th>
+                    <th>模版</th>
+                    <th>内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each recordList}}
+                <tr id='{{_id}}'>
+                    <td>{{date_helper date}}</td>
+                    <td>{{status_helper status}}</td>
+                    <td>{{template}}</td>
+                    <td>{{content}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+{{>pagination}}
+{{else}}
+<div class="spinner spinner-lg"></div>
+{{/if}}
+    </div>
+</div>
+
+<div class="modal fade" id="modal_content" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <span class="pficon pficon-close"></span>
+        </button>
+                <h4 class="modal-title">发布预览</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    {{current_content}}
+                </div>
+            </div>
+            <hr style="margin:0"/>
+            <div class="modal-footer" style="margin:0">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
 </template>
