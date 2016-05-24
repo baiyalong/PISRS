@@ -61,10 +61,10 @@ Meteor.startup(function () {
     //--------------------------------------------------------------------------------------------------------------
     //-------------------------service-------------------------------------------------------------------------------------
     if (Service.find().count() == 0) {
-        console.log('fixture----------service--------------start---------')
-        Service.insert({ sn: 1, name: 'test1', schedule: 'every 20 seconds', status: 1 })
-        Service.insert({ sn: 2, name: 'test2', schedule: 'every 15 seconds', status: 1 })
-        console.log('fixture----------service--------------end---------')
+        // console.log('fixture----------service--------------start---------')
+        // Service.insert({ sn: 1, name: 'test1', schedule: 'every 20 seconds', status: 1 })
+        // Service.insert({ sn: 2, name: 'test2', schedule: 'every 15 seconds', status: 1 })
+        // console.log('fixture----------service--------------end---------')
     }
     //--------------------------------------------------------------------------------------------------------------
     //-------------------------users-------------------------------------------------------------------------------------

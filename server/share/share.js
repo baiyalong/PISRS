@@ -56,7 +56,7 @@ Meteor.methods({
     },
     'share.template': function () {
         var share = Share.findOne({}, { sort: { date: -1 } })
-        return share ? share.template:'';
+        return share ? share.template : '';
     },
     'varList': function () {
         function aqiDaily(cityCode) {
