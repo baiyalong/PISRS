@@ -1,12 +1,12 @@
 Template.login.onCreated(function () {
     Session.set('captchaURL', "/api/captcha/" + Meteor.connection._lastSessionId + '?rand=')
-
 })
 
 Template.login.onRendered(function () {
     $('html').attr('class', 'login-pf')
     $('body').attr('class', '')
     // $("#img").attr("src", Session.get('captchaURL') + Math.random());
+    auto_route()
 })
 
 Template.login.helpers({

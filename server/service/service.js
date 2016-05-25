@@ -205,7 +205,7 @@ Meteor.methods({
                 $set: {
                     sn: sn,
                     name: job,
-                    schedule: 'every 5 m',
+                    schedule: 'every 1 h',
                     status: 0
                 }
             })

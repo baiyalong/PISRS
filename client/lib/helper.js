@@ -23,10 +23,20 @@ date_range_condition = function (date, type) {
         return { $gte: date_from, $lt: date_to }
 }
 
-date_range_condition_day = function(date){
-    return date_range_condition(date,'day')
+date_range_condition_day = function (date) {
+    return date_range_condition(date, 'day')
 }
 
-date_range_condition_hour = function(date){
-    return date_range_condition(date,'hour')
+date_range_condition_hour = function (date) {
+    return date_range_condition(date, 'hour')
+}
+
+auto_route = function () {
+    var user = Meteor.user();
+    var role = user && user.roles && user.roles[0];
+    if (role) {
+        if (role == 'admin') FlowRouter.go('/monitor/pollutantCityDaily');
+        else if (role == 'audit') FlowRouter.go('/forecast/airQualityAudit');
+        else FlowRouter.go('/forecast/airQualityApply');
+    }
 }
