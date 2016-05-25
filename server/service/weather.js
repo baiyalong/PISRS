@@ -18,7 +18,7 @@ weather = {
                 weather.getData(areaid, type, date);
             }
             else if (res.content != 'data error') {
-                var res = Weather.upsert({
+                var res = WeatherForecast.upsert({
                     areaid: areaid
                 }, {
                         $set: {

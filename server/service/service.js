@@ -26,15 +26,17 @@ var jobs = {
         var t = PollutantStationHourly.findOne({}, { sort: { monitorTime: -1 } }).monitorTime;
         var f = new Future();
         mysqlPool.getConnection(Meteor.bindEnvironment(function (err, connection) {
-            errorProcess(err, 'syncPollutantStationHourly')
-            connection.query(
-                'select * from T_ENV_AUTOMONI_AIRDATA_HOUR_S where MONITORTIME > ? order by MONITORTIME;',
-                [t],
-                Meteor.bindEnvironment(function (err, rows) {
-                    errorProcess(err, 'syncPollutantStationHourly')
-                    connection.release();
-                    f.return(rows);
-                }))
+            if (err)
+                errorProcess(err, 'syncPollutantStationHourly')
+            else
+                connection.query(
+                    'select * from T_ENV_AUTOMONI_AIRDATA_HOUR_S where MONITORTIME > ? order by MONITORTIME;',
+                    [t],
+                    Meteor.bindEnvironment(function (err, rows) {
+                        errorProcess(err, 'syncPollutantStationHourly')
+                        connection.release();
+                        f.return(rows);
+                    }))
         }))
         var data = f.wait();
         data.forEach(function (e) {
@@ -53,15 +55,17 @@ var jobs = {
         var t = PollutantStationDaily.findOne({}, { sort: { MONITORTIME: -1 } }).MONITORTIME;
         var f = new Future();
         mysqlPool.getConnection(Meteor.bindEnvironment(function (err, connection) {
-            errorProcess(err, 'syncPollutantStationDaily')
-            connection.query(
-                'select * from AIR_STATIONDAY_AQI_SRC where MONITORTIME > ? order by MONITORTIME;',
-                [t],
-                Meteor.bindEnvironment(function (err, rows) {
-                    errorProcess(err, 'syncPollutantStationDaily')
-                    connection.release();
-                    f.return(rows);
-                }))
+            if (err)
+                errorProcess(err, 'syncPollutantStationDaily')
+            else
+                connection.query(
+                    'select * from AIR_STATIONDAY_AQI_SRC where MONITORTIME > ? order by MONITORTIME;',
+                    [t],
+                    Meteor.bindEnvironment(function (err, rows) {
+                        errorProcess(err, 'syncPollutantStationDaily')
+                        connection.release();
+                        f.return(rows);
+                    }))
         }))
         var data = f.wait();
         data.forEach(function (e) {
@@ -74,15 +78,17 @@ var jobs = {
         else return false;
         var f = new Future();
         mysqlPool.getConnection(Meteor.bindEnvironment(function (err, connection) {
-            errorProcess(err, 'syncPollutantCityHourly')
-            connection.query(
-                'select * from AIR_CITYHOUR_AQI_DATA where TimePoint > ? order by TimePoint;',
-                [t],
-                Meteor.bindEnvironment(function (err, rows) {
-                    errorProcess(err, 'syncPollutantCityHourly')
-                    connection.release();
-                    f.return(rows);
-                }))
+            if (err)
+                errorProcess(err, 'syncPollutantCityHourly')
+            else
+                connection.query(
+                    'select * from AIR_CITYHOUR_AQI_DATA where TimePoint > ? order by TimePoint;',
+                    [t],
+                    Meteor.bindEnvironment(function (err, rows) {
+                        errorProcess(err, 'syncPollutantCityHourly')
+                        connection.release();
+                        f.return(rows);
+                    }))
         }))
         var data = f.wait();
         data.forEach(function (e) {
@@ -93,15 +99,17 @@ var jobs = {
         var t = PollutantCityDaily.findOne({}, { sort: { MONITORTIME: -1 } }).MONITORTIME;
         var f = new Future();
         mysqlPool.getConnection(Meteor.bindEnvironment(function (err, connection) {
-            errorProcess(err, 'syncPollutantCityDaily')
-            connection.query(
-                'select * from AIR_CITYDAY_AQI_SRC where MONITORTIME > ? order by MONITORTIME;',
-                [t],
-                Meteor.bindEnvironment(function (err, rows) {
-                    errorProcess(err, 'syncPollutantCityDaily')
-                    connection.release();
-                    f.return(rows);
-                }))
+            if (err)
+                errorProcess(err, 'syncPollutantCityDaily')
+            else
+                connection.query(
+                    'select * from AIR_CITYDAY_AQI_SRC where MONITORTIME > ? order by MONITORTIME;',
+                    [t],
+                    Meteor.bindEnvironment(function (err, rows) {
+                        errorProcess(err, 'syncPollutantCityDaily')
+                        connection.release();
+                        f.return(rows);
+                    }))
         }))
         var data = f.wait();
         data.forEach(function (e) {
@@ -112,15 +120,17 @@ var jobs = {
         var t = AirQualityForecast.findOne({}, { sort: { publishtime: -1 } }).publishtime;
         var f = new Future();
         mysqlPool.getConnection(Meteor.bindEnvironment(function (err, connection) {
-            errorProcess(err, 'syncAirQualityForecast')
-            connection.query(
-                'select * from T_AIR_FORECAST_NMINFO where publishtime > ? order by publishtime;',
-                [t],
-                Meteor.bindEnvironment(function (err, rows) {
-                    errorProcess(err, 'syncAirQualityForecast')
-                    connection.release();
-                    f.return(rows);
-                }))
+            if (err)
+                errorProcess(err, 'syncAirQualityForecast')
+            else
+                connection.query(
+                    'select * from T_AIR_FORECAST_NMINFO where publishtime > ? order by publishtime;',
+                    [t],
+                    Meteor.bindEnvironment(function (err, rows) {
+                        errorProcess(err, 'syncAirQualityForecast')
+                        connection.release();
+                        f.return(rows);
+                    }))
         }))
         var data = f.wait();
         data.forEach(function (e) {

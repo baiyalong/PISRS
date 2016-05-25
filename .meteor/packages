@@ -41,3 +41,4 @@ jparker:crypto-hmac
 jparker:crypto-base64
 jparker:crypto-sha1
 harrison:papa-parse
+http
