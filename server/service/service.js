@@ -1,7 +1,6 @@
 
 SyncedCron.start();
 
-
 // SyncedCron.add({
 //     name: 'Crunch some important numbers for the marketing department',
 //     schedule: function (parser) {
@@ -13,13 +12,7 @@ SyncedCron.start();
 //     }
 // });
 var Future = Npm.require('fibers/future')
-var mysqlPool = mysql.createPool({
-    connectionLimit: 100,
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'NMHBSource'
-});
+var mysqlPool = mysql.createPool(JSON.parse(Assets.getText("mysql.json")));
 var errorProcess = function (err, jobName) {
     if (err) {
         console.log(err)
@@ -135,9 +128,7 @@ var jobs = {
         })
     },
     syncWeatherForecast: function () {
-        //TODO
-        errorProcess("//TODO syncWeatherForecast", 'syncWeatherForecast')
-
+        weather.job()
     }
 }
 

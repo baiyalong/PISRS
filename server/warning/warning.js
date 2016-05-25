@@ -45,8 +45,30 @@ Meteor.methods({
     'warning.push': function (_id) {
         var result = '';//
         //push methods...
+        var warning = Warning.findOne(_id);
+        if (!warning)
+            return;
+        var terminals = Terminal.find({ $and: [{ online: { $not: { $eq: false } } }, { uninstall: { $not: { $eq: true } } }] }).fetch();
 
-        return Meteor.call('warning.result', _id, result)
+        function filter(OS) {
+            return terminals.filter(function (e) {
+                if (e.subscription && e.subscription.length != 0 && e.OS == OS) {
+                    var subscript = false;
+                    e.subscription.forEach(function (s) {
+                        if (Math.floor(s / 100) * 100 == warning.cityCode) subscript = true;
+                        if(warning.cityCode==150000) subscript = true;
+                    })
+                    return subscript;
+                }
+            });
+        }
+
+        Meteor.call('push.IOS', filter('IOS'), warning.content);
+        Meteor.call('push.Android', filter('Android'), warning.content);
+        //TODO weixin
+        //TODO weibo
+
+        // return Meteor.call('warning.result', _id, result)
     },
     'warning.result': function (_id, result) {
         return Warning.update(_id, { $set: { result: result } })
