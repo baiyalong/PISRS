@@ -37,3 +37,7 @@ d3js:d3
 nvd3:nvd3
 nimble:restivus
 pcel:mysql
+jparker:crypto-hmac
+jparker:crypto-base64
+jparker:crypto-sha1
+harrison:papa-parse
